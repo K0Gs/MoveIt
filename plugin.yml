@@ -1,0 +1,12 @@
+author: K0Gs
+description: A "block" animation plugin;
+database: false
+main: com.k0gshole.MoveIt.MoveItMain
+name: MoveIt
+version: '1.0'
+depend: [Vault]
+commands:
+   moveit:     
+      description: Open The Gui.
+      usage: /gui, /gui invsee <player> 
+
