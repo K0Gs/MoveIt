@@ -54,8 +54,8 @@ public class MoveItCommand implements CommandExecutor{
 			pFrameBlock = null;
 		}else{
 		pAnimUuid = (UUID) pSelections.get(1);
-		pFrameUuid = (UUID) pSelections.get(2);
-		pFrameBlock = (Block) pSelections.get(3);
+		pFrameUuid = (UUID) pSelections.get(3);
+		pFrameBlock = (Block) pSelections.get(4);
 		}
 		if (arg2.length == 0){
 			//if (arg2 == ""){
