@@ -102,11 +102,11 @@ public class MoveItCommand implements CommandExecutor{
 				}
 				
 				animations.addIndex(arg2[2], player, uuid, Instant.now());
-				System.out.println(arg2[2] +" "+ player +" "+ uuid +" "+ Instant.now());
+				//System.out.println(arg2[2] +" "+ player +" "+ uuid +" "+ Instant.now());
 				frames.addIndex(player, uuid, frameUuid, 1, Instant.now());
-				System.out.println(player +" "+ uuid +" "+ frameUuid +" "+ 1 +" "+Instant.now());
+				//System.out.println(player +" "+ uuid +" "+ frameUuid +" "+ 1 +" "+Instant.now());
 				playerSelections.addIndex(player, uuid, 1, frameUuid, null);
-				System.out.println(player +" "+ uuid +" "+ 1 +" "+ frameUuid +" "+ null);
+				//System.out.println(player +" "+ uuid +" "+ 1 +" "+ frameUuid +" "+ null);
 				player.sendMessage("The animation "+arg2[2]+" has been created...");
 				return true;
 				}
@@ -127,9 +127,9 @@ public class MoveItCommand implements CommandExecutor{
 					if(arg2.length < 3){
 						
 								playerSelections.addIndex(player, pAnimUuid, pFrameInt+1, frameUuid, null);
-								System.out.println(player +" "+ pAnimUuid +" "+ pFrameInt+1 +" "+ frameUuid +" "+ null);
+								//System.out.println(player +" "+ pAnimUuid +" "+ pFrameInt+1 +" "+ frameUuid +" "+ null);
 								frames.addIndex(player, pAnimUuid, frameUuid, pFrameInt + 1, Instant.now());
-								System.out.println(player +" "+ pAnimUuid +" "+ frameUuid +" "+ pFrameInt + 1 +" "+ Instant.now());
+								//System.out.println(player +" "+ pAnimUuid +" "+ frameUuid +" "+ pFrameInt + 1 +" "+ Instant.now());
 								player.sendMessage("The frame "+Integer.toString(pFrameInt+1)+" has been created...");
 								return true;
 						
@@ -172,17 +172,11 @@ public class MoveItCommand implements CommandExecutor{
 				if(arg2[1].equalsIgnoreCase("animation")){
 				if(arg2.length < 3){
 					//String deleted = deleteAnimation.deleteAnimations(pAnimUuid);
-					ArrayList framesList = new ArrayList();
-					ArrayList tempList = new ArrayList(frames.returnL());
-					for(int a = 0; a < tempList.size(); a++){
-						ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-						if(pAnimUuid.equals((UUID) tempList2.get(1))){
-						framesList.add((UUID) tempList2.get(2));
-						}
-					}
+					ArrayList framesList = new ArrayList(frames.framesList(pAnimUuid));
+					
 					
 					String blockCount = frameBlocks.removeBlock(framesList);
-					String frameCount = frames.removeFrame(pAnimUuid, "");
+					String frameCount = frames.removeFrame(pAnimUuid, "0");
 					String animRemoved = animations.removeAnimation(pAnimUuid);
 					
 					player.sendMessage(animRemoved + " animation(s) have been deleted...");
@@ -276,7 +270,7 @@ public class MoveItCommand implements CommandExecutor{
 						ArrayList tempList = new ArrayList(animations.returnL());
 						for(int a = 0; a < tempList.size();a++){
 							ArrayList tempList2 = (ArrayList)tempList.get(a);
-							if( arg2[1].equalsIgnoreCase((String)tempList2.get(0))){
+							if( arg2[2].equalsIgnoreCase((String)tempList2.get(0))){
 								ArrayList tempList3 = new ArrayList((ArrayList) frames.returnL());
 								ArrayList tempList4 = new ArrayList();
 								ArrayList tempList5 = new ArrayList();
@@ -292,7 +286,7 @@ public class MoveItCommand implements CommandExecutor{
 								return true;
 							}
 						}
-						player.sendMessage("The animation "+arg2[1]+" cannot be found...");
+						player.sendMessage("The animation "+arg2[2]+" cannot be found...");
 						return false;
 					}
 					

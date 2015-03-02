@@ -27,7 +27,7 @@ public class FrameBlocks {
 
 	public String removeBlock(ArrayList uuidList){
 		int count = 0;
-		for (int a = 0;a < this.store.size();a++){
+		for (int a = this.store.size()-1; a > -1; a--){
 			ArrayList tempList = new ArrayList((ArrayList) store.get(a));
 			UUID frameUuid = (UUID) tempList.get(2);
 

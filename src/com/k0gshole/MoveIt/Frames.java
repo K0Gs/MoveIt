@@ -27,11 +27,12 @@ public class Frames {
 	
 	public String removeFrame(UUID uuid, String dummy){
 		int count = 0;
-			for (int a = 0;a < this.store.size();a++){
-				ArrayList tempList = new ArrayList((ArrayList) this.store.get(a));
+		ArrayList tempList = new ArrayList((ArrayList) this.store);
+			for (int a = tempList.size() - 1; a > -1; a--){
+				ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
 				//UUID tempInst2 = (UUID)tempList.get(2);
 
-				if(uuid.equals((UUID)tempList.get(1))){
+				if(uuid.equals((UUID)tempList2.get(1))){
 					this.store.remove(a);
 					count++;
 				}
@@ -81,6 +82,19 @@ public class Frames {
 				player.sendMessage(Integer.toString((Integer) tempList2.get(3)));
 			}
 		}
+	}
+	
+	public ArrayList framesList(UUID uuid){
+		ArrayList tempList = new ArrayList();
+		ArrayList tempList2 = new ArrayList();
+		for(int a = 0; a < this.store.size(); a++){
+			tempList = new ArrayList((ArrayList) this.store.get(a));
+			if(uuid.equals((UUID) tempList.get(1))){
+			tempList2.add((UUID) tempList.get(2));
+			}
+		}
+		
+		return tempList2;
 	}
 	
 	public void clearData(){
