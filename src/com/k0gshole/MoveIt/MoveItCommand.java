@@ -103,7 +103,7 @@ public class MoveItCommand implements CommandExecutor{
 				}
 				
 				animations.addIndex(arg2[2], player, uuid, Instant.now());
-				frames.addIndex(player, uuid, frameUuid, 0, Instant.now());
+				frames.addIndex(player, uuid, frameUuid, 1, Instant.now());
 				playerSelections.addIndex(player, uuid, 1, frameUuid, null);
 				player.sendMessage("The animation "+arg2[2]+" has been created...");
 				return true;
