@@ -223,7 +223,6 @@ public class MoveItCommand implements CommandExecutor{
 					}
 					
 					if(arg2.length > 2){
-						String dFrames = deleteFrames.deleteFrame(arg2[2], pFrameUuid);
 						
 						player.sendMessage("Frames cannot be deleted by name...");
 						return false;
