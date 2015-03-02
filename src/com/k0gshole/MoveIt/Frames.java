@@ -55,12 +55,12 @@ public class Frames {
 	
 	public void framesList(Player player, UUID uuid){
 		ArrayList tempList = new ArrayList(store);
-		player.sendMessage("Framws: ");
+		player.sendMessage("Frames: ");
 		
 		for(int a = 0; a < tempList.size(); a++){
 			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-			if(uuid == (UUID)tempList2.get(1)){
-				player.sendMessage((String) tempList2.get(3));
+			if(uuid == (UUID)tempList2.get(2)){
+				player.sendMessage(Integer.toString((Integer) tempList2.get(3)));
 			}
 		}
 	}
