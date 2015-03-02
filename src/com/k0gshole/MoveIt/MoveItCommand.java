@@ -167,7 +167,7 @@ public class MoveItCommand implements CommandExecutor{
 						player.sendMessage("You must have an animation selected...");
 						return false;
 					}
-					frameBlocks.addIndex(player.getTargetBlock(null, 15), player, pAnimUuid, Instant.now());
+					frameBlocks.addIndex(player.getTargetBlock(null, 15), player, pFrameUuid, Instant.now());
 					player.sendMessage("The block has been added...");
 					return true;
 					
