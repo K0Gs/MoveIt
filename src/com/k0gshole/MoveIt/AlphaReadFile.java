@@ -28,7 +28,7 @@ public class AlphaReadFile {
 		return textData;
 	}
 	
-int readLines() throws IOException {
+	public int readLines() throws IOException {
 	
 	FileReader file_to_read = new FileReader(path);
 	BufferedReader bf = new BufferedReader(file_to_read);
