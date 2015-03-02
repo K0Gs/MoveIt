@@ -25,15 +25,18 @@ public class FrameBlocks {
 		this.store.add(tList);
 	}
 
-	public String removeBlock(UUID uuid){
+	public String removeBlock(ArrayList uuidList){
 		int count = 0;
 		for (int a = 0;a < this.store.size();a++){
 			ArrayList tempList = new ArrayList((ArrayList) store.get(a));
 			UUID frameUuid = (UUID) tempList.get(2);
 
+			for(int b = 0; b < uuidList.size(); b++){
+				UUID uuid = (UUID) uuidList.get(b);
 			if(uuid.equals(frameUuid)){
 				this.store.remove(a);
 				count++;
+			}
 			}
 
 		}

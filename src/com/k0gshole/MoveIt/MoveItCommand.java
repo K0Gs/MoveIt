@@ -18,7 +18,6 @@ public class MoveItCommand implements CommandExecutor{
 	Frames frames;
 	FrameBlocks frameBlocks;
 	PlayerSelections playerSelections;
-	DeleteFrames deleteFrames;
 	public UUID pAnimUuid;
 	public UUID pFrameUuid;
 	public int pFrameInt;
@@ -30,7 +29,6 @@ public class MoveItCommand implements CommandExecutor{
 		frames = new Frames();
 		frameBlocks = new FrameBlocks();
 		playerSelections = new PlayerSelections();
-		deleteFrames = new DeleteFrames();
 		
 		pAnimUuid = UUID.randomUUID();
 		pFrameUuid = UUID.randomUUID();
@@ -188,10 +186,18 @@ public class MoveItCommand implements CommandExecutor{
 				if(arg2[1].equalsIgnoreCase("animation")){
 				if(arg2.length < 3){
 					//String deleted = deleteAnimation.deleteAnimations(pAnimUuid);
+					ArrayList framesList = new ArrayList();
+					ArrayList tempList = new ArrayList((ArrayList) frames.returnL());
+					for(int a = 0; a < tempList.size(); a++){
+						ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+						if(pAnimUuid.equals((UUID) tempList.get(1))){
+						framesList.add((UUID) tempList2.get(2));
+						}
+					}
 					
+					String blockCount = frameBlocks.removeBlock(framesList);
+					String frameCount = frames.removeFrame(pAnimUuid, "");
 					String animRemoved = animations.removeAnimation(pAnimUuid);
-					String frameCount = frames.removeFrame(pFrameUuid);
-					String blockCount = frameBlocks.removeBlock(pFrameUuid);
 					
 					player.sendMessage(animRemoved + " animation(s) have been deleted...");
 					player.sendMessage(frameCount + " frame(s) have been deleted...");
@@ -212,8 +218,16 @@ public class MoveItCommand implements CommandExecutor{
 				
 					if(arg2.length < 3){
 						
-						String frameCount = frames.removeFrame(pFrameUuid);
-						String blockCount = frameBlocks.removeBlock(pFrameUuid);
+						ArrayList framesList = new ArrayList();
+						ArrayList tempList = new ArrayList((ArrayList) frames.returnL());
+						for(int a = 0; a < tempList.size(); a++){
+							ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+							if(pFrameUuid.equals((UUID) tempList2.get(2))){
+							framesList.add((UUID) tempList2.get(2));
+							}
+						}
+						String blockCount = frameBlocks.removeBlock(framesList);
+						String frameCount = frames.removeFrame(pFrameUuid, 0);
 						
 						player.sendMessage(frameCount + " frame(s) have been deleted...");
 						player.sendMessage(blockCount + " block(s) have been deleted...");
