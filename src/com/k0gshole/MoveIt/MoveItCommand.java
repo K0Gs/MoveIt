@@ -22,6 +22,7 @@ public class MoveItCommand implements CommandExecutor{
 	DeleteFrames deleteFrames;
 	public UUID pAnimUuid;
 	public UUID pFrameUuid;
+	public int pFrameInt;
 	public Block pFrameBlock;
 	public ArrayList pSelections;
 	
@@ -36,6 +37,7 @@ public class MoveItCommand implements CommandExecutor{
 		pAnimUuid = UUID.randomUUID();
 		pFrameUuid = UUID.randomUUID();
 		pFrameBlock = null;
+		pFrameInt = 0;
 		pSelections = new ArrayList();
 	}
 	
@@ -54,6 +56,7 @@ public class MoveItCommand implements CommandExecutor{
 			pFrameBlock = null;
 		}else{
 		pAnimUuid = (UUID) pSelections.get(1);
+		pFrameInt = (Integer) pSelections.get(2);
 		pFrameUuid = (UUID) pSelections.get(3);
 		pFrameBlock = (Block) pSelections.get(4);
 		}
@@ -143,17 +146,17 @@ public class MoveItCommand implements CommandExecutor{
 									
 								}
 								lastFrame = tempList2.size();
-								playerSelections.addIndex(player, pAnimUuid, lastFrame, frameUuid, null);
-								frames.addIndex(player, pAnimUuid, frameUuid, Integer.parseInt(arg2[2]), Instant.now());
-								player.sendMessage("The frame "+arg2[2]+" has been created...");
+								playerSelections.addIndex(player, pAnimUuid, lastFrame+1, frameUuid, null);
+								frames.addIndex(player, pAnimUuid, frameUuid, lastFrame + 1, Instant.now());
+								player.sendMessage("The frame "+Integer.toString(lastFrame+1)+" has been created...");
 								return true;
 						}
 						
 						
-						playerSelections.addIndex(player, pAnimUuid, lastFrame, frameUuid, null);
-						frames.addIndex(player, pAnimUuid, frameUuid, Integer.parseInt(arg2[2]), Instant.now());
-						player.sendMessage("The frame "+arg2[2]+" has been created...");	
-						return true;
+						//playerSelections.addIndex(player, pAnimUuid, lastFrame, frameUuid, null);
+						//frames.addIndex(player, pAnimUuid, frameUuid, Integer.parseInt(arg2[2]), Instant.now());
+						//player.sendMessage("The frame "+arg2[2]+" has been created...");	
+						//return true;
 					}
 				}
 				
@@ -167,7 +170,9 @@ public class MoveItCommand implements CommandExecutor{
 						player.sendMessage("You must have an animation selected...");
 						return false;
 					}
-					frameBlocks.addIndex(player.getTargetBlock(null, 15), player, pFrameUuid, Instant.now());
+					Block tempBlock = player.getTargetBlock(null, 15);
+					frameBlocks.addIndex(tempBlock, player, pFrameUuid, Instant.now());
+					playerSelections.addIndex(player, pAnimUuid, pFrameInt, pFrameUuid, tempBlock);
 					player.sendMessage("The block has been added...");
 					return true;
 					
