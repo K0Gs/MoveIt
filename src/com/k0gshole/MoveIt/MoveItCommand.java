@@ -131,22 +131,14 @@ public class MoveItCommand implements CommandExecutor{
 					player.sendMessage("The frame "+arg2[2]+" has been created...");
 					return true;
 					}
+					
 					if(arg2.length < 3){
-						ArrayList tempList = new ArrayList((ArrayList) frames.returnL());
-						ArrayList tempList2 = new ArrayList();
-						int lastFrame = 0;
-						for(int a = 0; a < tempList.size(); a++){
-							ArrayList tempList3 = (ArrayList) tempList.get(a);
-								if(pAnimUuid == (UUID) tempList3.get(1)){
-									tempList2.add(new ArrayList(tempList3));
-									
-								}
-								lastFrame = tempList2.size();
-								playerSelections.addIndex(player, pAnimUuid, lastFrame+1, frameUuid, null);
-								frames.addIndex(player, pAnimUuid, frameUuid, lastFrame + 1, Instant.now());
-								player.sendMessage("The frame "+Integer.toString(lastFrame+1)+" has been created...");
+						
+								playerSelections.addIndex(player, pAnimUuid, pFrameInt+1, frameUuid, null);
+								frames.addIndex(player, pAnimUuid, frameUuid, pFrameInt + 1, Instant.now());
+								player.sendMessage("The frame "+Integer.toString(pFrameInt+1)+" has been created...");
 								return true;
-						}
+						
 						
 						
 						//playerSelections.addIndex(player, pAnimUuid, lastFrame, frameUuid, null);
