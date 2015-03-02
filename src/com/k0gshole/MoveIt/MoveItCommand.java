@@ -268,27 +268,35 @@ public class MoveItCommand implements CommandExecutor{
 					
 					if(arg2.length > 2){
 						ArrayList tempList = new ArrayList(animations.returnL());
+						ArrayList tempList5 = new ArrayList();
+						UUID tempUUID = null;
 						for(int a = 0; a < tempList.size();a++){
 							ArrayList tempList2 = (ArrayList)tempList.get(a);
 							if( arg2[2].equalsIgnoreCase((String)tempList2.get(0))){
-								ArrayList tempList3 = new ArrayList((ArrayList) frames.returnL());
-								ArrayList tempList4 = new ArrayList();
-								ArrayList tempList5 = new ArrayList();
+								tempUUID = (UUID) tempList2.get(1);
+							}
+						}
+						if(tempUUID == null){
+						player.sendMessage("The animation "+arg2[2]+" cannot be found...");
+						return false;
+						}
+						
+						ArrayList tempList3 = new ArrayList((ArrayList) frames.returnL());
+						ArrayList tempList4 = new ArrayList();
+								//tempList5 = new ArrayList();
 								for(int b = 0; b < tempList3.size(); b++){
 									tempList4 = new ArrayList((ArrayList) tempList3.get(b));
-									if((UUID) tempList2.get(1) == (UUID) tempList4.get(1)){
+									if(tempUUID.equals((UUID) tempList4.get(1))){
 										tempList5.add((ArrayList) tempList3.get(b));
 									}
 								}
 								
 								ArrayList tempListFin = (ArrayList) tempList5.get(0);
-								playerSelections.addIndex(player, (UUID) tempList2.get(1), 1, (UUID) tempListFin.get(2), null);
+								playerSelections.addIndex(player, (UUID) tempUUID, 1, (UUID) tempListFin.get(2), null);
 								return true;
 							}
-						}
-						player.sendMessage("The animation "+arg2[2]+" cannot be found...");
-						return false;
-					}
+
+					
 					
 				}
 				
@@ -308,7 +316,7 @@ public class MoveItCommand implements CommandExecutor{
 						ArrayList tempList6 = new ArrayList();
 						for(int b = 0; b < tempList3.size(); b++){
 							tempList4 = new ArrayList((ArrayList) tempList3.get(b));
-							if(pAnimUuid == (UUID) tempList4.get(1)){
+							if(pAnimUuid.equals((UUID) tempList4.get(1))){
 								tempList5.add((ArrayList) tempList3.get(b));
 							}
 						}
