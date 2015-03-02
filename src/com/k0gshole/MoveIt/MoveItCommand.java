@@ -190,7 +190,7 @@ public class MoveItCommand implements CommandExecutor{
 					ArrayList tempList = new ArrayList((ArrayList) frames.returnL());
 					for(int a = 0; a < tempList.size(); a++){
 						ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-						if(pAnimUuid.equals((UUID) tempList.get(1))){
+						if(pAnimUuid.equals((UUID) tempList2.get(1))){
 						framesList.add((UUID) tempList2.get(2));
 						}
 					}
