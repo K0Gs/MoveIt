@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class MoveItCommand implements CommandExecutor{
-	
+
 	private MoveItMain plugin;
 	Animations animations;
 	Frames frames;
@@ -23,27 +23,27 @@ public class MoveItCommand implements CommandExecutor{
 	public int pFrameInt;
 	public Block pFrameBlock;
 	public ArrayList pSelections;
-	
+
 	public MoveItCommand(){
 		animations = new Animations();
 		frames = new Frames();
 		frameBlocks = new FrameBlocks();
 		playerSelections = new PlayerSelections();
-		
+
 		pAnimUuid = UUID.randomUUID();
 		pFrameUuid = UUID.randomUUID();
 		pFrameBlock = null;
 		pFrameInt = 0;
 		pSelections = new ArrayList();
 	}
-	
+
 	public boolean onCommand(CommandSender sender, Command command, String arg1,
 			String arg2[]){
-		
+
 		if(!(sender instanceof Player)){
 			return false;	
 		}
-		
+
 		Player player = (Player)sender;
 		pSelections = new ArrayList((ArrayList) playerSelections.returnPlayer(player));
 		if(pSelections.size() == 0){
@@ -51,10 +51,10 @@ public class MoveItCommand implements CommandExecutor{
 			pFrameUuid = null;
 			pFrameBlock = null;
 		}else{
-		pAnimUuid = (UUID) pSelections.get(1);
-		pFrameInt = (Integer) pSelections.get(2);
-		pFrameUuid = (UUID) pSelections.get(3);
-		pFrameBlock = (Block) pSelections.get(4);
+			pAnimUuid = (UUID) pSelections.get(1);
+			pFrameInt = (Integer) pSelections.get(2);
+			pFrameUuid = (UUID) pSelections.get(3);
+			pFrameBlock = (Block) pSelections.get(4);
 		}
 		if (arg2.length == 0){
 			//if (arg2 == ""){
@@ -63,15 +63,15 @@ public class MoveItCommand implements CommandExecutor{
 			return true;
 			//}
 		}
-		
+
 		if(arg2.length != 0){
 			String newStr = "";
 			for(int a = 0;a < arg2.length;a++){
 				newStr = newStr + " " + arg2[a];
 			}
 			player .sendMessage("Player "+ sender + "Command " + command.toString() + " First String " + arg1.toString() +"Second String "+ newStr);
-		
-			
+
+
 			if (arg2[0].equalsIgnoreCase("create")){
 				if(arg2.length < 2){
 					player.sendMessage("You need specify the creation type...");
@@ -82,35 +82,35 @@ public class MoveItCommand implements CommandExecutor{
 				ArrayList playerSelection = new ArrayList((ArrayList) playerSelections.returnL());
 				UUID uuid = UUID.randomUUID();
 				UUID frameUuid = UUID.randomUUID();
-				
-				
+
+
 				if(arg2[1].equalsIgnoreCase("animation")){
 					if(arg2.length < 3){
-						
 
-							player.sendMessage("You need to name the animation...");
-							return false;
-						
-					}
-				ArrayList tempList = new ArrayList(animations.returnL());
-				for(int a = 0; a < tempList.size();a++){
-					ArrayList tempList2 = (ArrayList)tempList.get(a);
-					if( arg2[2].equalsIgnoreCase((String)tempList2.get(0))){
-						player.sendMessage("This animation "+arg2[2]+" has already been created...");
+
+						player.sendMessage("You need to name the animation...");
 						return false;
+
 					}
+					ArrayList tempList = new ArrayList(animations.returnL());
+					for(int a = 0; a < tempList.size();a++){
+						ArrayList tempList2 = (ArrayList)tempList.get(a);
+						if( arg2[2].equalsIgnoreCase((String)tempList2.get(0))){
+							player.sendMessage("This animation "+arg2[2]+" has already been created...");
+							return false;
+						}
+					}
+
+					animations.addIndex(arg2[2], player, uuid, Instant.now());
+					//System.out.println(arg2[2] +" "+ player +" "+ uuid +" "+ Instant.now());
+					frames.addIndex(player, uuid, frameUuid, 1, Instant.now());
+					//System.out.println(player +" "+ uuid +" "+ frameUuid +" "+ 1 +" "+Instant.now());
+					playerSelections.addIndex(player, uuid, 1, frameUuid, null);
+					//System.out.println(player +" "+ uuid +" "+ 1 +" "+ frameUuid +" "+ null);
+					player.sendMessage("The animation "+arg2[2]+" has been created...");
+					return true;
 				}
-				
-				animations.addIndex(arg2[2], player, uuid, Instant.now());
-				//System.out.println(arg2[2] +" "+ player +" "+ uuid +" "+ Instant.now());
-				frames.addIndex(player, uuid, frameUuid, 1, Instant.now());
-				//System.out.println(player +" "+ uuid +" "+ frameUuid +" "+ 1 +" "+Instant.now());
-				playerSelections.addIndex(player, uuid, 1, frameUuid, null);
-				//System.out.println(player +" "+ uuid +" "+ 1 +" "+ frameUuid +" "+ null);
-				player.sendMessage("The animation "+arg2[2]+" has been created...");
-				return true;
-				}
-				
+
 				if(arg2[1].equalsIgnoreCase("frame")){
 					ArrayList plSelec = new ArrayList(playerSelections.returnPlayer(player));
 					if(plSelec.size() == 0){
@@ -123,25 +123,25 @@ public class MoveItCommand implements CommandExecutor{
 						return false;
 
 					}
-					
+
 					if(arg2.length < 3){
-						
-								playerSelections.addIndex(player, pAnimUuid, pFrameInt+1, frameUuid, null);
-								//System.out.println(player +" "+ pAnimUuid +" "+ pFrameInt+1 +" "+ frameUuid +" "+ null);
-								frames.addIndex(player, pAnimUuid, frameUuid, pFrameInt + 1, Instant.now());
-								//System.out.println(player +" "+ pAnimUuid +" "+ frameUuid +" "+ pFrameInt + 1 +" "+ Instant.now());
-								player.sendMessage("The frame "+Integer.toString(pFrameInt+1)+" has been created...");
-								return true;
-						
-						
-						
+
+						playerSelections.addIndex(player, pAnimUuid, pFrameInt+1, frameUuid, null);
+						//System.out.println(player +" "+ pAnimUuid +" "+ pFrameInt+1 +" "+ frameUuid +" "+ null);
+						frames.addIndex(player, pAnimUuid, frameUuid, pFrameInt + 1, Instant.now());
+						//System.out.println(player +" "+ pAnimUuid +" "+ frameUuid +" "+ pFrameInt + 1 +" "+ Instant.now());
+						player.sendMessage("The frame "+Integer.toString(pFrameInt+1)+" has been created...");
+						return true;
+
+
+
 						//playerSelections.addIndex(player, pAnimUuid, lastFrame, frameUuid, null);
 						//frames.addIndex(player, pAnimUuid, frameUuid, Integer.parseInt(arg2[2]), Instant.now());
 						//player.sendMessage("The frame "+arg2[2]+" has been created...");	
 						//return true;
 					}
 				}
-				
+
 				if(arg2[1].equalsIgnoreCase("block")){
 					if(player.getTargetBlock(null, 15).isEmpty()){
 						player.sendMessage("You need to be looking at a block within a radius of 15...");
@@ -157,7 +157,7 @@ public class MoveItCommand implements CommandExecutor{
 					playerSelections.addIndex(player, pAnimUuid, pFrameInt, pFrameUuid, tempBlock);
 					player.sendMessage("The block has been added...");
 					return true;
-					
+
 				}
 			}
 			if (arg2[0].equalsIgnoreCase("delete")){
@@ -167,88 +167,109 @@ public class MoveItCommand implements CommandExecutor{
 					player.sendMessage("./moveit delete <animation,frame,block>");
 					return false;
 				}
-				
-				
-				if(arg2[1].equalsIgnoreCase("animation")){
-				if(arg2.length < 3){
-					//String deleted = deleteAnimation.deleteAnimations(pAnimUuid);
-					ArrayList framesList = new ArrayList(frames.framesList(pAnimUuid));
-					
-					
-					String blockCount = frameBlocks.removeBlock(framesList);
-					String frameCount = frames.removeFrame(pAnimUuid, "0");
-					String animRemoved = animations.removeAnimation(pAnimUuid);
-					
-					player.sendMessage(animRemoved + " animation(s) have been deleted...");
-					player.sendMessage(frameCount + " frame(s) have been deleted...");
-					player.sendMessage(blockCount + " block(s) have been deleted...");
-					return true;
-					
-				}
-				
-				if(arg2.length > 2){
 
-				
-				player.sendMessage("The animation cannot be deleted by name...");
-				return false;
-				}
-				}
-				
-				if(arg2[1].equalsIgnoreCase("frame")){
-				
+
+				if(arg2[1].equalsIgnoreCase("animation")){
 					if(arg2.length < 3){
-						
+						//String deleted = deleteAnimation.deleteAnimations(pAnimUuid);
+						ArrayList framesList = new ArrayList(frames.framesList(pAnimUuid));
+
+
+						String blockCount = frameBlocks.removeBlock(framesList);
+						String frameCount = frames.removeFrame(pAnimUuid, "0");
+						String animRemoved = animations.removeAnimation(pAnimUuid);
+
+						player.sendMessage(animRemoved + " animation(s) have been deleted...");
+						player.sendMessage(frameCount + " frame(s) have been deleted...");
+						player.sendMessage(blockCount + " block(s) have been deleted...");
+						playerSelections.addIndex(player, null, 0, null, null);
+						return true;
+
+					}
+
+					if(arg2.length > 2){
+
+
+						player.sendMessage("The animation cannot be deleted by name...");
+						return false;
+					}
+				}
+
+				if(arg2[1].equalsIgnoreCase("frame")){
+
+					if(arg2.length < 3){
+
 						ArrayList framesList = new ArrayList();
+						ArrayList framesListFull = new ArrayList();
 						ArrayList tempList = new ArrayList((ArrayList) frames.returnL());
 						for(int a = 0; a < tempList.size(); a++){
 							ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
 							if(pFrameUuid.equals((UUID) tempList2.get(2))){
-							framesList.add((UUID) tempList2.get(2));
+								framesListFull.add((ArrayList) tempList2);
+								framesList.add((UUID) tempList2.get(2));
 							}
 						}
+
 						String blockCount = frameBlocks.removeBlock(framesList);
 						String frameCount = frames.removeFrame(pFrameUuid, 0);
-						
+
 						player.sendMessage(frameCount + " frame(s) have been deleted...");
 						player.sendMessage(blockCount + " block(s) have been deleted...");
+
+						tempList = new ArrayList((ArrayList) frames.returnL());
+						for(int a = 0; a < tempList.size(); a++){
+							ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+							if(pFrameUuid.equals((UUID) tempList2.get(2))){
+								framesListFull.add((ArrayList) tempList2);
+								framesList.add((UUID) tempList2.get(2));
+							}
+						}
+
+						int listCount = framesListFull.size()-1;
+						ArrayList  tempSelectList = new ArrayList((ArrayList)framesListFull.get(listCount));
+
+						playerSelections.addIndex(player, pAnimUuid, (Integer) tempSelectList.get(3), (UUID) tempSelectList.get(2), null);
 						return true;
-						
-						
+
+
 					}
-					
+
 					if(arg2.length > 2){
-						
+
 						player.sendMessage("Frames cannot be deleted by name...");
 						return false;
 					}
-					
+
 				}
-			
+
 				if(arg2[1].equalsIgnoreCase("block")){
-					
+
 					if(arg2.length < 3){
-						
-						String blockCount = frameBlocks.removeBlock(pFrameBlock);
-						
+						if(player.getTargetBlock(null, 15).isEmpty()){
+							player.sendMessage("You need to be looking at a block within a radius of 15...");
+							return false;
+						}
+						String blockCount = frameBlocks.removeBlock(player.getTargetBlock(null, 15));
+
 						player.sendMessage(blockCount + " block(s) have been deleted...");
 						return true;
 					}
-					
+
 					if(arg2.length > 2){
-						if(arg2[2].equalsIgnoreCase("look")){
-							
-							String blockCount = frameBlocks.removeBlock(player.getTargetBlock(null, 15));
-							
+						if(arg2[2].equalsIgnoreCase("last")){
+
+							String blockCount = frameBlocks.removeBlock(pFrameBlock);
+
 							player.sendMessage(blockCount + " block(s) have been deleted...");
 							return true;
 						}
-						
+
 					}
-					
+
 				}
-				
+
 			}
-			
+
 			if(arg2[0].equalsIgnoreCase("select")){
 				if(arg2.length < 2){
 					player.sendMessage("You need specify the select type...");
@@ -256,16 +277,16 @@ public class MoveItCommand implements CommandExecutor{
 					player.sendMessage("./moveit select <animation,frame>");
 					return false;
 				}
-				
+
 				if(arg2[1].equalsIgnoreCase("animation")){
 					if(arg2.length < 3){
-						
 
-							player.sendMessage("You need the name of the animation...");
-							return false;
-						
+
+						player.sendMessage("You need the name of the animation...");
+						return false;
+
 					}
-					
+
 					if(arg2.length > 2){
 						ArrayList tempList = new ArrayList(animations.returnL());
 						ArrayList tempList5 = new ArrayList();
@@ -273,42 +294,42 @@ public class MoveItCommand implements CommandExecutor{
 						for(int a = 0; a < tempList.size();a++){
 							ArrayList tempList2 = (ArrayList)tempList.get(a);
 							if( arg2[2].equalsIgnoreCase((String)tempList2.get(0))){
-								tempUUID = (UUID) tempList2.get(1);
+								tempUUID = (UUID) tempList2.get(2);
 							}
 						}
 						if(tempUUID == null){
-						player.sendMessage("The animation "+arg2[2]+" cannot be found...");
-						return false;
+							player.sendMessage("The animation "+arg2[2]+" cannot be found...");
+							return false;
 						}
-						
+
 						ArrayList tempList3 = new ArrayList((ArrayList) frames.returnL());
 						ArrayList tempList4 = new ArrayList();
-								//tempList5 = new ArrayList();
-								for(int b = 0; b < tempList3.size(); b++){
-									tempList4 = new ArrayList((ArrayList) tempList3.get(b));
-									if(tempUUID.equals((UUID) tempList4.get(1))){
-										tempList5.add((ArrayList) tempList3.get(b));
-									}
-								}
-								
-								ArrayList tempListFin = (ArrayList) tempList5.get(0);
-								playerSelections.addIndex(player, (UUID) tempUUID, 1, (UUID) tempListFin.get(2), null);
-								return true;
+						//tempList5 = new ArrayList();
+						for(int b = 0; b < tempList3.size(); b++){
+							tempList4 = new ArrayList((ArrayList) tempList3.get(b));
+							if(tempUUID.equals((UUID) tempList4.get(1))){
+								tempList5.add((ArrayList) tempList3.get(b));
 							}
+						}
 
-					
-					
+						ArrayList tempListFin = (ArrayList) tempList5.get(0);
+						playerSelections.addIndex(player, (UUID) tempUUID, 1, (UUID) tempListFin.get(2), null);
+						return true;
+					}
+
+
+
 				}
-				
+
 				if(arg2[1].equalsIgnoreCase("frame")){
 					if(arg2.length < 3){
-						
 
-							player.sendMessage("You need the number of the frame...");
-							return false;
-						
+
+						player.sendMessage("You need the number of the frame...");
+						return false;
+
 					}
-					
+
 					if(arg2.length > 2){
 						ArrayList tempList3 = new ArrayList((ArrayList) frames.returnL());
 						ArrayList tempList4 = new ArrayList();
@@ -322,20 +343,20 @@ public class MoveItCommand implements CommandExecutor{
 						}
 						for(int c = 0; c < tempList5.size(); c++){
 							tempList6 = new ArrayList((ArrayList) tempList5.get(c));
-							if(arg2[2].equals((String) tempList6.get(3))){
+							if(Integer.parseInt(arg2[2]) == ((Integer) tempList6.get(3))){
 								playerSelections.addIndex(player, pAnimUuid, Integer.parseInt(arg2[2]), (UUID) tempList6.get(2), null);
 								return true;
 							}
 						}
 						player.sendMessage("The frame "+arg2[2]+" cannot be found...");
 						return false;
-						
+
 					}
 				}
-				
-				
+
+
 			}
-			
+
 			if(arg2[0].equalsIgnoreCase("list")){
 				if(arg2.length < 2){
 					player.sendMessage("You need specify the list type...");
@@ -343,31 +364,31 @@ public class MoveItCommand implements CommandExecutor{
 					player.sendMessage("./moveit select <animation,frame,block>");
 					return false;
 				}
-				
+
 				if(arg2[1].equalsIgnoreCase("animation")){
 					animations.animationsList(player);
 					return true;
-					
+
 				}
-				
+
 				if(arg2[1].equalsIgnoreCase("frame")){
 					frames.framesList(player, pAnimUuid);
 					return true;
-					
+
 				}
-				
+
 				if(arg2[1].equalsIgnoreCase("block")){
 					frameBlocks.blocksList(player, pFrameUuid);
 					return true;
 				}
-				
+
 			}
-			
+
 		}
-		
-		
+
+
 		return false;
 	}
-	
+
 
 }
