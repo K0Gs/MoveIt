@@ -32,7 +32,7 @@ public class Frames {
 				ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
 				//UUID tempInst2 = (UUID)tempList.get(2);
 
-				if(uuid.equals((UUID)tempList.get(2))){
+				if(uuid.equals((UUID)tempList2.get(2))){
 					this.store.remove(a);
 					count++;
 				}

@@ -43,11 +43,12 @@ public class FrameBlocks {
 	
 	public String removeBlock(Block block){
 		int count = 0;
-		for (int a = 0;a < this.store.size();a++){
-			ArrayList tempList = new ArrayList((ArrayList)this.store.get(a));
+		ArrayList tempList = new ArrayList(store);
+		for (int a = 0;a < tempList.size();a++){
+			ArrayList tempList2 = new ArrayList((ArrayList)tempList.get(a));
 			Block frameBlock = (Block) tempList.get(0);
 
-			if(frameBlock.getLocation() == block.getLocation()){
+			if(frameBlock.equals(block)){
 				this.store.remove(a);
 				count++;
 			}
