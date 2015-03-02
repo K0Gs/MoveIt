@@ -59,7 +59,7 @@ public class Frames {
 		
 		for(int a = 0; a < tempList.size(); a++){
 			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-			if(uuid == (UUID)tempList2.get(2)){
+			if(uuid == (UUID)tempList2.get(1)){
 				player.sendMessage(Integer.toString((Integer) tempList2.get(3)));
 			}
 		}
