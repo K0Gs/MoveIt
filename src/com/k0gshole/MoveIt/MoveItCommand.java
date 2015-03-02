@@ -89,7 +89,7 @@ public class MoveItCommand implements CommandExecutor{
 					if(arg2.length < 3){
 						
 
-							player.sendMessage("You need to name the anaiation...");
+							player.sendMessage("You need to name the animation...");
 							return false;
 						
 					}
@@ -284,7 +284,7 @@ public class MoveItCommand implements CommandExecutor{
 					if(arg2.length < 3){
 						
 
-							player.sendMessage("You need the name of the anaiation...");
+							player.sendMessage("You need the name of the animation...");
 							return false;
 						
 					}
