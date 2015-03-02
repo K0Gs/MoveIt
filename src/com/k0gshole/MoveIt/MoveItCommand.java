@@ -48,10 +48,15 @@ public class MoveItCommand implements CommandExecutor{
 		
 		Player player = (Player)sender;
 		pSelections = new ArrayList((ArrayList) playerSelections.returnPlayer(player));
+		if(pSelections.size() == 0){
+			pAnimUuid = null;
+			pFrameUuid = null;
+			pFrameBlock = null;
+		}else{
 		pAnimUuid = (UUID) pSelections.get(1);
 		pFrameUuid = (UUID) pSelections.get(2);
 		pFrameBlock = (Block) pSelections.get(3);
-		
+		}
 		if (arg2.length == 0){
 			//if (arg2 == ""){
 			//player.openInventory(GUEye.getInstance().displayGUI(player));
