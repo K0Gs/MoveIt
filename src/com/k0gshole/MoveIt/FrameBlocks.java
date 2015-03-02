@@ -49,7 +49,7 @@ public class FrameBlocks {
 		ArrayList tempList = new ArrayList(store);
 		for (int a = 0;a < tempList.size();a++){
 			ArrayList tempList2 = new ArrayList((ArrayList)tempList.get(a));
-			Block frameBlock = (Block) tempList.get(0);
+			Block frameBlock = (Block) tempList2.get(0);
 
 			if(frameBlock.equals(block)){
 				this.store.remove(a);
