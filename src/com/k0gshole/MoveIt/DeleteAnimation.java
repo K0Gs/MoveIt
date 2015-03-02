@@ -83,27 +83,35 @@ public class DeleteAnimation {
 		int animRemoved = 0;
 		int frameCount = 0;
 		int blockCount = 0;
-		
+		UUID frameUuidU = UUID.randomUUID();
 		uuid = animName;
-		animations.removeAnimation(uuid);
+		
+		int animError = animations.removeAnimation(uuid);
+		if (animError == 0){
 		animRemoved++;
+		}
 		
 		for(int b = 0; b < frameList.size(); b++){
 			tempList = new ArrayList((ArrayList) frameList.get(b));
-			if(uuid == (UUID) tempList.get(1)){
+			if(uuid.equals((UUID) tempList.get(1))){
 				frameUuid.add((UUID) tempList.get(2));
-				frames.removeFrame((UUID) tempList.get(2));
+				frameUuidU = (UUID) tempList.get(2);
+				int framError = frames.removeFrame(frameUuidU);
+				if (framError == 0){
 				frameCount++;
+				}
 			}
 			
 		}
 		
+
 		for(int c = 0; c < blockList.size(); c++){
 			tempList = new  ArrayList((ArrayList) blockList.get(c));
 		for(int d = 0; d < frameUuid.size(); d++){
-			if((UUID) frameUuid.get(d) == (UUID) tempList.get(2)){
-				frameBlocks.removeBlock((UUID) frameUuid.get(d));
-				blockCount++;
+			if(((UUID) tempList.get(2)).equals((UUID) frameUuid.get(d))){
+				String count = frameBlocks.removeBlock((UUID) frameUuid.get(d));
+				
+				blockCount = Integer.parseInt(count);
 			}
 			
 		}

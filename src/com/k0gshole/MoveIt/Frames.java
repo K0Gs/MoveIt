@@ -25,18 +25,21 @@ public class Frames {
 		this.store.add(tList);
 	}
 	
-	public void removeFrame(UUID uuid){
-			for (int a = 0;a < this.store.size();a++){
-				ArrayList tempList = new ArrayList((ArrayList)this.store.get(a));
-				UUID tempInst2 = (UUID)tempList.get(2);
+	public int removeFrame(UUID uuid){
+		int error = 1;
+		ArrayList tempList = new ArrayList((ArrayList) store);
+			for (int a = 0;a < tempList.size();a++){
+				ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+				//UUID tempInst2 = (UUID)tempList.get(2);
 
-				if(tempInst2 == uuid){
+				if(uuid.equals((UUID)tempList.get(2))){
 					this.store.remove(a);
+					error = 0;
 				}
 				
 			}
 			
-		
+		return error;
 	}
 	
 	public void removeFrame(int frame){
