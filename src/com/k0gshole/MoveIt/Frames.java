@@ -25,8 +25,8 @@ public class Frames {
 		this.store.add(tList);
 	}
 	
-	public int removeFrame(UUID uuid){
-		int error = 1;
+	public String removeFrame(UUID uuid){
+		int count = 0;
 		ArrayList tempList = new ArrayList((ArrayList) store);
 			for (int a = 0;a < tempList.size();a++){
 				ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
@@ -34,12 +34,12 @@ public class Frames {
 
 				if(uuid.equals((UUID)tempList.get(2))){
 					this.store.remove(a);
-					error = 0;
+					count++;
 				}
 				
 			}
 			
-		return error;
+		return Integer.toString(count);
 	}
 	
 	public void removeFrame(int frame){

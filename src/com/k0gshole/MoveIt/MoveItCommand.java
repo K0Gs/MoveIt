@@ -18,7 +18,6 @@ public class MoveItCommand implements CommandExecutor{
 	Frames frames;
 	FrameBlocks frameBlocks;
 	PlayerSelections playerSelections;
-	DeleteAnimation deleteAnimation;
 	DeleteFrames deleteFrames;
 	public UUID pAnimUuid;
 	public UUID pFrameUuid;
@@ -31,7 +30,6 @@ public class MoveItCommand implements CommandExecutor{
 		frames = new Frames();
 		frameBlocks = new FrameBlocks();
 		playerSelections = new PlayerSelections();
-		deleteAnimation = new DeleteAnimation();
 		deleteFrames = new DeleteFrames();
 		
 		pAnimUuid = UUID.randomUUID();
@@ -189,10 +187,11 @@ public class MoveItCommand implements CommandExecutor{
 				
 				if(arg2[1].equalsIgnoreCase("animation")){
 				if(arg2.length < 3){
-					String deleted = deleteAnimation.deleteAnimations(pAnimUuid);
-					String animRemoved = deleted.split(":")[0];
-					String frameCount = deleted.split(":")[1];
-					String blockCount = deleted.split(":")[2];
+					//String deleted = deleteAnimation.deleteAnimations(pAnimUuid);
+					
+					String animRemoved = animations.removeAnimation(pAnimUuid);
+					String frameCount = frames.removeFrame(pFrameUuid);
+					String blockCount = frameBlocks.removeBlock(pFrameUuid);
 					
 					player.sendMessage(animRemoved + " animation(s) have been deleted...");
 					player.sendMessage(frameCount + " frame(s) have been deleted...");
@@ -202,27 +201,9 @@ public class MoveItCommand implements CommandExecutor{
 				}
 				
 				if(arg2.length > 2){
-				ArrayList tempList = new ArrayList(animations.returnL());
-				for(int a = 0; a < tempList.size();a++){
-					ArrayList tempList2 = (ArrayList)tempList.get(a);
-					if( arg2[1].equalsIgnoreCase((String)tempList2.get(0))){
-						
-						
-						String deleted = deleteAnimation.deleteAnimations(arg2[1]);
-						String animRemoved = deleted.split(":")[0];
-						String frameCount = deleted.split(":")[1];
-						String blockCount = deleted.split(":")[2];
-						
-						player.sendMessage(animRemoved + " animation(s) have been deleted...");
-						player.sendMessage(frameCount + " frame(s) have been deleted...");
-						player.sendMessage(blockCount + " block(s) have been deleted...");
-						return true;
-						
-					}
+
 				
-				}
-				
-				player.sendMessage("The animation "+arg2[1]+" cannot be found...");
+				player.sendMessage("The animation cannot be deleted by name...");
 				return false;
 				}
 				}
@@ -230,9 +211,9 @@ public class MoveItCommand implements CommandExecutor{
 				if(arg2[1].equalsIgnoreCase("frame")){
 				
 					if(arg2.length < 3){
-						String dFrames = deleteFrames.deleteFrame(pFrameUuid);
-						String frameCount = dFrames.split(":")[0];
-						String blockCount = dFrames.split(":")[1];
+						
+						String frameCount = frames.removeFrame(pFrameUuid);
+						String blockCount = frameBlocks.removeBlock(pFrameUuid);
 						
 						player.sendMessage(frameCount + " frame(s) have been deleted...");
 						player.sendMessage(blockCount + " block(s) have been deleted...");
@@ -243,12 +224,9 @@ public class MoveItCommand implements CommandExecutor{
 					
 					if(arg2.length > 2){
 						String dFrames = deleteFrames.deleteFrame(arg2[2], pFrameUuid);
-						String frameCount = dFrames.split(":")[0];
-						String blockCount = dFrames.split(":")[1];
 						
-						player.sendMessage(frameCount + " frame(s) have been deleted...");
-						player.sendMessage(blockCount + " block(s) have been deleted...");
-						return true;
+						player.sendMessage("Frames cannot be deleted by name...");
+						return false;
 					}
 					
 				}
@@ -256,8 +234,8 @@ public class MoveItCommand implements CommandExecutor{
 				if(arg2[1].equalsIgnoreCase("block")){
 					
 					if(arg2.length < 3){
-						String dBlock = frameBlocks.removeBlock(pFrameBlock);
-						String blockCount = dBlock.split(":")[0];
+						
+						String blockCount = frameBlocks.removeBlock(pFrameBlock);
 						
 						player.sendMessage(blockCount + " block(s) have been deleted...");
 						return true;
@@ -265,8 +243,8 @@ public class MoveItCommand implements CommandExecutor{
 					
 					if(arg2.length > 2){
 						if(arg2[2].equalsIgnoreCase("look")){
-							String dBlock = frameBlocks.removeBlock(player.getTargetBlock(null, 15));
-							String blockCount = dBlock.split(":")[0];
+							
+							String blockCount = frameBlocks.removeBlock(player.getTargetBlock(null, 15));
 							
 							player.sendMessage(blockCount + " block(s) have been deleted...");
 							return true;

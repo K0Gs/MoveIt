@@ -24,20 +24,20 @@ public class Animations {
 		this.store.add(tList);
 	}
 	
-	public int removeAnimation(UUID uuid){
-		int error = 1;
+	public String removeAnimation(UUID uuid){
+		int count = 0;
 		ArrayList tempList = new ArrayList((ArrayList) store);
 			for (int a = 0;a < tempList.size();a++){
 				ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
 
 				if(uuid.equals((UUID) tempList2.get(2))){
 					this.store.remove(a);
-					error = 0;
+					count++;
 				}
 				
 			}
 			
-		return error;
+		return Integer.toString(count);
 	}
 	
 	public void removeAnimation(String animName){
