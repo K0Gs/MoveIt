@@ -27,12 +27,11 @@ public class Frames {
 	
 	public String removeFrame(UUID uuid, String dummy){
 		int count = 0;
-		ArrayList tempList = new ArrayList((ArrayList) store);
-			for (int a = 0;a < tempList.size();a++){
-				ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+			for (int a = 0;a < this.store.size();a++){
+				ArrayList tempList = new ArrayList((ArrayList) this.store.get(a));
 				//UUID tempInst2 = (UUID)tempList.get(2);
 
-				if(uuid.equals((UUID)tempList2.get(1))){
+				if(uuid.equals((UUID)tempList.get(1))){
 					this.store.remove(a);
 					count++;
 				}
@@ -44,12 +43,11 @@ public class Frames {
 	
 	public String removeFrame(UUID uuid, int dummy){
 		int count = 0;
-		ArrayList tempList = new ArrayList((ArrayList) store);
-			for (int a = 0;a < tempList.size();a++){
-				ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+			for (int a = 0;a < this.store.size();a++){
+				ArrayList tempList = new ArrayList((ArrayList) this.store.get(a));
 				//UUID tempInst2 = (UUID)tempList.get(2);
 
-				if(uuid.equals((UUID)tempList2.get(2))){
+				if(uuid.equals((UUID)tempList.get(2))){
 					this.store.remove(a);
 					count++;
 				}

@@ -102,8 +102,11 @@ public class MoveItCommand implements CommandExecutor{
 				}
 				
 				animations.addIndex(arg2[2], player, uuid, Instant.now());
+				System.out.println(arg2[2] +" "+ player +" "+ uuid +" "+ Instant.now());
 				frames.addIndex(player, uuid, frameUuid, 1, Instant.now());
+				System.out.println(player +" "+ uuid +" "+ frameUuid +" "+ 1 +" "+Instant.now());
 				playerSelections.addIndex(player, uuid, 1, frameUuid, null);
+				System.out.println(player +" "+ uuid +" "+ 1 +" "+ frameUuid +" "+ null);
 				player.sendMessage("The animation "+arg2[2]+" has been created...");
 				return true;
 				}
@@ -116,26 +119,17 @@ public class MoveItCommand implements CommandExecutor{
 					}
 
 					if(arg2.length > 2){
-					ArrayList tempList = new ArrayList((ArrayList) frames.returnL());
-					for(int a = 0; a < tempList.size(); a++){
-						ArrayList tempList2 = (ArrayList) tempList.get(a);
-						if(arg2[2].equals(Integer.toString((Integer) tempList2.get(3)))){
-							player.sendMessage("This frame "+arg2[2]+" has already been created...");
-							return false;
-						}
-					}
+						player.sendMessage("Frames cannot be created by number...");
+						return false;
 
-
-					playerSelections.addIndex(player, pAnimUuid, Integer.parseInt(arg2[2]), frameUuid, null);
-					frames.addIndex(player, pAnimUuid, frameUuid, Integer.parseInt(arg2[2]), Instant.now());
-					player.sendMessage("The frame "+arg2[2]+" has been created...");
-					return true;
 					}
 					
 					if(arg2.length < 3){
 						
 								playerSelections.addIndex(player, pAnimUuid, pFrameInt+1, frameUuid, null);
+								System.out.println(player +" "+ pAnimUuid +" "+ pFrameInt+1 +" "+ frameUuid +" "+ null);
 								frames.addIndex(player, pAnimUuid, frameUuid, pFrameInt + 1, Instant.now());
+								System.out.println(player +" "+ pAnimUuid +" "+ frameUuid +" "+ pFrameInt + 1 +" "+ Instant.now());
 								player.sendMessage("The frame "+Integer.toString(pFrameInt+1)+" has been created...");
 								return true;
 						
@@ -179,7 +173,7 @@ public class MoveItCommand implements CommandExecutor{
 				if(arg2.length < 3){
 					//String deleted = deleteAnimation.deleteAnimations(pAnimUuid);
 					ArrayList framesList = new ArrayList();
-					ArrayList tempList = new ArrayList((ArrayList) frames.returnL());
+					ArrayList tempList = new ArrayList(frames.returnL());
 					for(int a = 0; a < tempList.size(); a++){
 						ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
 						if(pAnimUuid.equals((UUID) tempList2.get(1))){
