@@ -14,14 +14,13 @@ public class Frames {
 		store  = new ArrayList();
 	}
 	
-	public void addIndex(Player player, UUID animUuid, UUID frameUuid, int frame, Instant now){
+	public void addIndex(UUID player, UUID animUuid, UUID frameUuid, int frame){
 		
 		ArrayList tList = new ArrayList();
 		tList.add(player);
 		tList.add(animUuid);
 		tList.add(frameUuid);
 		tList.add(frame);
-		tList.add(now);
 		this.store.add(tList);
 	}
 	
@@ -78,7 +77,7 @@ public class Frames {
 		
 		for(int a = 0; a < tempList.size(); a++){
 			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-			if(uuid == (UUID)tempList2.get(1)){
+			if(uuid.toString().equals(((UUID)tempList2.get(1)).toString()) || uuid.toString() == ((UUID) tempList2.get(1)).toString() || uuid == (UUID) tempList2.get(1)){
 				player.sendMessage(Integer.toString((Integer) tempList2.get(3)));
 			}
 		}
@@ -106,7 +105,11 @@ public class Frames {
 		return this.store;
 	}
 
+	public void setArray(ArrayList newArray){
+		this.store = new ArrayList((ArrayList) newArray);
+	}
 }
+
 /*
  * Version 1.0 
  * By K0Gs

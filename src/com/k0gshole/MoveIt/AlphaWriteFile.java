@@ -1,7 +1,11 @@
 package com.k0gshole.MoveIt;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 
 public class AlphaWriteFile{
@@ -17,11 +21,12 @@ public class AlphaWriteFile{
 		append_to_file = append_value;
 	}
 	
-	public void writeToFile(String textLine) throws IOException{
-		FileWriter write = new FileWriter(path, append_to_file);
-		PrintWriter print_line = new PrintWriter(write);
-		print_line.printf("%s" + "%n", textLine);
+	public void writeToFile(ArrayList arrayOut) throws IOException{
+		FileOutputStream write = new FileOutputStream(path, append_to_file);
+		ObjectOutputStream print_line = new ObjectOutputStream(write);
+		print_line.writeObject( arrayOut);
 		print_line.close();
+		write.close();
 	}
 }
 

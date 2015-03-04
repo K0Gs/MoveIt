@@ -15,11 +15,11 @@ public class PlayerSelections {
 		store  = new ArrayList();
 	}
 	
-	public void addIndex(Player player, UUID animation, Integer frameInt, UUID frame, Block block){
+	public void addIndex(UUID player, UUID animation, Integer frameInt, UUID frame, Block block){
 		
 		for(int a = 0; a < store.size(); a++){
 			ArrayList tempList = new ArrayList((ArrayList) store.get(a));
-			if(player == (Player) tempList.get(0)){
+			if(player == (UUID) tempList.get(0)){
 				store.remove(a);
 			}
 			
@@ -49,20 +49,21 @@ public class PlayerSelections {
 	
 	}
 	
-	public ArrayList returnPlayer(Player player){
-		ArrayList tempList = new ArrayList();
+	public ArrayList returnPlayer(UUID player){
+		ArrayList tempList = new ArrayList(store);
 		ArrayList tempList2 = new ArrayList();
-		for(int a = 0; a < store.size(); a++){
-			tempList = new ArrayList((ArrayList) store.get(a));
-			if(player == tempList.get(0)){
-				for(int b = 0; b < tempList.size(); b++){
-					tempList2.add(tempList.get(b));
+		ArrayList tempList3 = new ArrayList();
+		for(int a = 0; a < tempList.size(); a++){
+			tempList2 = new ArrayList((ArrayList) tempList.get(a));
+			if(player == (UUID) tempList2.get(0) || player.equals((UUID) tempList2.get(0))){
+				for(int b = 0; b < tempList2.size(); b++){
+					tempList3.add(tempList2.get(b));
 				}
 			}
 			
 		}
 		
-		return tempList2;
+		return tempList3;
 	}
 	
 	public void clearData(){

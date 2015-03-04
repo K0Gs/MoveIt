@@ -6,6 +6,16 @@ import org.bukkit.event.HandlerList;
 public class GameTickEvent extends Event{
 
 
+	//Animations animations;
+	//Frames frames;
+	//FrameBlocks frameBlocks;
+	
+	public GameTickEvent(){
+		//animations = new Animations();
+		//frames = new Frames();
+		//frameBlocks = new FrameBlocks();
+	}
+	
 	private static final HandlerList handlers = new HandlerList();
 
 	@Override
