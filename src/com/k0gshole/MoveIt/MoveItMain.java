@@ -11,10 +11,12 @@ import java.util.UUID;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.Plugin;
@@ -36,6 +38,10 @@ public class MoveItMain extends JavaPlugin{
 	public ArrayList animation = new ArrayList();
 	public ArrayList frameblocks = new ArrayList();
 	public ArrayList frames = new ArrayList();
+	public ArrayList selections = new ArrayList();
+	public ArrayList playList = new ArrayList();
+	public int wand_tool = 0;
+	public YamlConfiguration config = null;
 	//Animations animations = new Animations();
 	//Frames frames = new Frames();
 	//FrameBlocks frameBlocks = new FrameBlocks();
@@ -77,6 +83,11 @@ public class MoveItMain extends JavaPlugin{
 
 			getInstance().saveResource("frameBlocks.dat", false);
 		}
+		
+		config = YamlConfiguration.loadConfiguration(configyml);
+		wand_tool = config.getInt("wand_tool");
+		
+		
 		MoveItCommand loadFile = new MoveItCommand();
 		loadFile.loadArrays();
 		
@@ -87,6 +98,7 @@ public class MoveItMain extends JavaPlugin{
 		MoveItCommand saveDat = new MoveItCommand();
 		saveDat.saveArrays();
 		instance.getServer().broadcastMessage("[MoveIt] Good bye...");
+	
 	}
 
     private boolean setupPermissions() {
@@ -230,30 +242,40 @@ public class MoveItMain extends JavaPlugin{
 
 	}
 	
-	/*public String removeBlock(Block block){
+	public String removeBlock(Block block, UUID frameUUID){
 		int count = 0;
 		ArrayList tempList = new ArrayList(frameblocks);
 		for (int a = 0;a < tempList.size();a++){
 			ArrayList tempList2 = new ArrayList((ArrayList)tempList.get(a));
-			Block frameBlock = (Block) tempList2.get(0);
-
+			String frameLoc = (String) tempList2.get(2);
+			String[] FrameLocArray = frameLoc.split(":");
+			Block frameBlock = block.getWorld().getBlockAt(Integer.parseInt(FrameLocArray[0]), Integer.parseInt(FrameLocArray[1]), Integer.parseInt(FrameLocArray[2]) );
 			if(frameBlock.equals(block)){
+			if(frameUUID.equals((UUID) tempList2.get(5))){
 				this.frameblocks.remove(a);
 				count++;
+			}
 			}
 
 		}
 		return Integer.toString(count);
 
-	}*/
+	}
 	
 	public void blocksList(Player player, UUID uuid, String worldName){
 		ArrayList tempList = new ArrayList(frameblocks);
 		player.sendMessage("Blocks: ");
-		
+		if(uuid == null){
+			uuid = UUID.randomUUID();
+		}
 		for(int a = 0; a < tempList.size(); a++){
 			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-			if(uuid.toString().equals(((UUID) tempList2.get(5)).toString()) || uuid.toString() == ((UUID) tempList2.get(5)).toString() || uuid == (UUID)tempList2.get(5)){
+			//player.sendMessage(Integer.toString(tempList2.size()));
+			UUID tempUUID = UUID.randomUUID();
+			if((UUID) tempList2.get(5) != null){
+				tempUUID = (UUID) tempList2.get(5);
+			}
+			if(uuid.toString().equals(tempUUID.toString()) || uuid.toString() == tempUUID.toString() || uuid == tempUUID){
 				String tempLoc = (String) tempList2.get(2);
 				String[] tempCoord = tempLoc.split(":");
 				//player.sendMessage(Integer.toString(tempCoord.length));
@@ -341,10 +363,16 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 	public void framesList(Player player, UUID uuid){
 		ArrayList tempList = new ArrayList(frames);
 		player.sendMessage("Frames: ");
-		
+		if(uuid == null){
+			uuid = UUID.randomUUID();
+		}
 		for(int a = 0; a < tempList.size(); a++){
 			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-			if(uuid.toString().equals(((UUID)tempList2.get(1)).toString()) || uuid.toString() == ((UUID) tempList2.get(1)).toString() || uuid == (UUID) tempList2.get(1)){
+			UUID tempUUID = UUID.randomUUID();
+			if((UUID)tempList2.get(1) != null){
+				tempUUID = (UUID)tempList2.get(1);
+			}
+			if(uuid.toString().equals(tempUUID.toString()) || uuid.toString() == tempUUID.toString() || uuid == tempUUID){
 				player.sendMessage(Integer.toString((Integer) tempList2.get(3)));
 			}
 		}
@@ -377,4 +405,90 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 	}
 
 
+	public void addIndexPSelect(UUID player, UUID animation, Integer frameInt, UUID frame, Block block, int wand){
+		
+		for(int a = 0; a < selections.size(); a++){
+			ArrayList tempList = new ArrayList((ArrayList) selections.get(a));
+			if(player == (UUID) tempList.get(0)){
+				selections.remove(a);
+			}
+			
+		}
+		
+		ArrayList tList = new ArrayList();
+		tList.add(player);
+		tList.add(animation);
+		tList.add(frameInt);
+		tList.add(frame);
+		tList.add(block);
+		tList.add(wand);
+		this.selections.add(tList);
+		
+	}
+	
+	public void removePlayerPSelect(Player player){
+		for (int a = 0;a < this.selections.size();a++){
+			ArrayList tempList = new ArrayList((ArrayList)this.selections.get(a));
+			Player tempPlayer = (Player) tempList.get(0);
+
+			if(tempPlayer == player){
+				this.selections.remove(a);
+			}
+			
+		}
+		
+	
+	}
+	
+	public ArrayList returnPlayerPSelect(UUID player){
+		ArrayList tempList = new ArrayList(selections);
+		ArrayList tempList2 = new ArrayList();
+		ArrayList tempList3 = new ArrayList();
+		for(int a = 0; a < tempList.size(); a++){
+			tempList2 = new ArrayList((ArrayList) tempList.get(a));
+			if(player == (UUID) tempList2.get(0) || player.equals((UUID) tempList2.get(0))){
+				for(int b = 0; b < tempList2.size(); b++){
+					tempList3.add(tempList2.get(b));
+				}
+			}
+			
+		}
+		
+		return tempList3;
+	}
+	
+	public void clearDataPSelect(){
+		this.selections.clear();
+		MoveItMain.instance.getServer().broadcastMessage("Clear Data");
+	}
+	
+	public ArrayList returnLPSelect(){
+		return this.selections;
+	}
+	
+public void addIndexPlayList(UUID animUUID, int frame, int frameMax){
+		
+		ArrayList tList = new ArrayList();
+		tList.add(animUUID);
+		tList.add(frame);
+		tList.add(frameMax);
+		this.playList.add(tList);
+	}
+
+public String removePlayList(UUID uuid, String dummy){
+	int count = 0;
+	ArrayList tempList = new ArrayList((ArrayList) this.frames);
+		for (int a = tempList.size() - 1; a > -1; a--){
+			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+			//UUID tempInst2 = (UUID)tempList.get(2);
+
+			if(uuid.equals((UUID)tempList2.get(0))){
+				this.playList.remove(a);
+				count++;
+			}
+			
+		}
+		
+	return Integer.toString(count);
+}
 }
