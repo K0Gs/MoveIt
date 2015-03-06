@@ -491,4 +491,8 @@ public String removePlayList(UUID uuid, String dummy){
 		
 	return Integer.toString(count);
 }
+
+	public ArrayList returnLPlayList(){
+	return this.playList;
+}
 }
