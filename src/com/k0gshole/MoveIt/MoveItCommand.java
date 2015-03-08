@@ -133,6 +133,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 					//System.out.println(player +" "+ uuid +" "+ frameUuid +" "+ 1 +" "+Instant.now());
 					MoveItMain.instance.addIndexPSelect(player.getUniqueId(), uuid, 1, frameUuid, null, pwand);
 					//System.out.println(player +" "+ uuid +" "+ 1 +" "+ frameUuid +" "+ null);
+					MoveItMain.instance.addIndexAnimationPosition(uuid, 1, "loop");
 					player.sendMessage("The animation "+arg2[2]+" has been created...");
 					return true;
 				}
@@ -573,6 +574,15 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		}
+		try {
+			MoveItMain.instance.setArrayAnimationPosition(OpenFile("animationPosition.dat"));
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
 		//animations.store = new ArrayList(dataFromFile("animations.dat"));
 		//frames.store = new ArrayList(dataFromFile("frames.dat"));
 		//frameBlocks.store = new ArrayList(dataFromFile("frameBlocks.dat"));
@@ -582,12 +592,14 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		ArrayList tempList = new ArrayList((ArrayList) MoveItMain.instance.returnLAnimation());
 		ArrayList tempList2 = new ArrayList((ArrayList) MoveItMain.instance.returnLFrames());
 		ArrayList tempList3 = new ArrayList((ArrayList) MoveItMain.instance.returnLFrameBlocks());
+		ArrayList tempList4 = new ArrayList((ArrayList) MoveItMain.instance.returnLAnimationPosition());
 
 		
 		try {
 			writeToFile(tempList, "animations.dat");
 			writeToFile(tempList2, "frames.dat");
 			writeToFile(tempList3, "frameBlocks.dat");
+			writeToFile(tempList4, "animationPosition.dat");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -730,7 +742,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			//int tempFrameInt = (Integer) tempList2.get(1);
 			int tempMaxFrame = (Integer) tempList2.get(2);
 			ArrayList animPos = new ArrayList((ArrayList) MoveItMain.instance.animationPositionList(tempUUID));
-			tempFrameInt =(Integer) animPos.get(1);
+			tempFrameInt = (Integer) animPos.get(1);
 			tempFrameInt++;
 			if(tempFrameInt > tempMaxFrame){
 				tempFrameInt = 1;

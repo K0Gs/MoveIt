@@ -35,6 +35,7 @@ public class MoveItMain extends JavaPlugin{
 	public File animationsFile = new File("plugins/MoveIt/animations.dat");
 	public File framesFile = new File("plugins/MoveIt/frames.dat");
 	public File frameBlocksFile = new File("plugins/MoveIt/frameBlocks.dat");
+	public File animationPositionFile = new File("plugins/MoveIt/animationPosition.dat");
 	public ArrayList animation = new ArrayList();
 	public ArrayList frameblocks = new ArrayList();
 	public ArrayList frames = new ArrayList();
@@ -83,6 +84,11 @@ public class MoveItMain extends JavaPlugin{
 		if(!frameBlocksFile.exists()){
 
 			getInstance().saveResource("frameBlocks.dat", false);
+		}
+		
+		if(!frameBlocksFile.exists()){
+
+			getInstance().saveResource("animationPosition.dat", false);
 		}
 		
 		config = YamlConfiguration.loadConfiguration(configyml);
@@ -535,6 +541,10 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 	
 	public ArrayList returnLAnimationPosition(){
 	return this.animationPosition;
+	}
+	
+	public void setArrayAnimationPosition(ArrayList newArray){
+		this.animationPosition = new ArrayList((ArrayList) newArray);
 	}
 	
 }
