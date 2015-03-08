@@ -86,7 +86,7 @@ public class MoveItMain extends JavaPlugin{
 			getInstance().saveResource("frameBlocks.dat", false);
 		}
 		
-		if(!frameBlocksFile.exists()){
+		if(!animationPositionFile.exists()){
 
 			getInstance().saveResource("animationPosition.dat", false);
 		}
@@ -505,7 +505,14 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 	
 	public void addIndexAnimationPosition(UUID animUUID, int lastFrame, String playMode){
 		
-		removePlayMode(animUUID);
+		//removePlayMode(animUUID);
+		for(int a = 0; a < animationPosition.size(); a++){
+			ArrayList tempList = new ArrayList((ArrayList) animationPosition.get(a));
+			if(animUUID == (UUID) tempList.get(0)){
+				animationPosition.remove(a);
+			}
+		}
+		
 		ArrayList tList = new ArrayList();
 		tList.add(animUUID);
 		tList.add(lastFrame);
@@ -526,18 +533,7 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 		return returnList;
 	}
 	
-	public void removePlayMode(UUID animUUID){
-		ArrayList tempList = new ArrayList((ArrayList) animationPosition);
-		ArrayList returnList = new ArrayList();
-		for(int a = tempList.size()-1; a > -1; a--){
-			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-			UUID tempUUID = (UUID) tempList2.get(0);
-			if(animUUID.toString() == tempUUID.toString() || animUUID.toString().equals(tempUUID.toString()) || animUUID == tempUUID){
-				animationPosition.remove(a);
-			}
-		}
 
-	}
 	
 	public ArrayList returnLAnimationPosition(){
 	return this.animationPosition;
@@ -545,6 +541,22 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 	
 	public void setArrayAnimationPosition(ArrayList newArray){
 		this.animationPosition = new ArrayList((ArrayList) newArray);
+	}
+	
+	public String removeAnimationPosition(UUID uuid){
+		int count = 0;
+			for (int a = 0;a < this.animationPosition.size();a++){
+				ArrayList tempList = new ArrayList((ArrayList) this.animationPosition.get(a));
+				//UUID tempInst2 = (UUID)tempList.get(2);
+
+				if(uuid.equals((UUID)tempList.get(2))){
+					this.animationPosition.remove(a);
+					count++;
+				}
+				
+			}
+			
+		return Integer.toString(count);
 	}
 	
 }

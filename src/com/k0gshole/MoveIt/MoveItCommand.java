@@ -192,6 +192,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 						String blockCount = MoveItMain.instance.removeBlock(framesList);
 						String frameCount = MoveItMain.instance.removeFrame(pAnimUuid, "0");
 						String animRemoved = MoveItMain.instance.removeAnimation(pAnimUuid);
+						String animPositionRemoved = MoveItMain.instance.removeAnimationPosition(pAnimUuid);
 
 						player.sendMessage(animRemoved + " animation(s) have been deleted...");
 						player.sendMessage(frameCount + " frame(s) have been deleted...");
@@ -725,15 +726,14 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	public void playFrames(){
 		//tempFrameInt++;
 		
-		ArrayList animationPosition =new ArrayList((ArrayList) MoveItMain.instance.returnLAnimationPosition());
+		//ArrayList animationPosition =new ArrayList((ArrayList) MoveItMain.instance.returnLAnimationPosition());
 		ArrayList tempList = new ArrayList(MoveItMain.instance.returnLPlayList());
 		ArrayList toPlayList = new ArrayList();
 
 		ArrayList toRemoveList = new ArrayList();
-		int tempFrameInt = 0;
+		int tempFrameInt = 1;
 		UUID finUUID = UUID.randomUUID();
 		String playMode = "";
-		
 		for(int a = 0; a < tempList.size(); a++){
 			
 			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
@@ -743,16 +743,44 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			int tempMaxFrame = (Integer) tempList2.get(2);
 			ArrayList animPos = new ArrayList((ArrayList) MoveItMain.instance.animationPositionList(tempUUID));
 			tempFrameInt = (Integer) animPos.get(1);
-			tempFrameInt++;
+			//tempFrameInt = tempFrameInt + 1;
+			int tempFrameInt2 = tempFrameInt - 1;
+			playMode = (String) animPos.get(2);
+			//tempFrameInt2--;
+			if(tempFrameInt2 == 0){
+				tempFrameInt2 = tempMaxFrame;
+			}	
+
+			//tempFrameInt--;
+
+			ArrayList tempList3 = new ArrayList(MoveItMain.instance.returnLFrames());
+			for(int b = 0; b < tempList3.size(); b++){
+				ArrayList tempList4 = new ArrayList((ArrayList) tempList3.get(b));
+				if(tempUUID == (UUID) tempList4.get(1) && tempFrameInt2 == (Integer) tempList4.get(3)){
+					//MoveItMain.instance.getServer().broadcastMessage("Frame match..." + Integer.toString(tempFrameInt));
+					UUID tempUUID2 = (UUID) tempList4.get(2);
+					ArrayList tempList5 = new ArrayList(MoveItMain.instance.returnLFrameBlocks());
+					//MoveItMain.instance.getServer().broadcastMessage("frameUUID "+tempUUID2.toString() + Integer.toString(tempList5.size()));
+					for(int c = 0; c < tempList5.size(); c++){
+						ArrayList tempList6 = new ArrayList((ArrayList) tempList5.get(c));
+						UUID tempUUID3 = (UUID) tempList6.get(5);
+						if(tempUUID.toString() == tempUUID3.toString() || tempUUID2.toString().equals(tempUUID3.toString()) || tempUUID2 == tempUUID3){
+							//MoveItMain.instance.getServer().broadcastMessage("Add to toremoveList...");
+							toRemoveList.add(tempList5.get(c));
+						}
+					}
+				}
+			}
+			
+			//tempFrameInt++;
+			//MoveItMain.instance.getServer().broadcastMessage("Frame..." + Integer.toString(tempFrameInt2));
+			
 			if(tempFrameInt > tempMaxFrame){
 				tempFrameInt = 1;
 			}	
 
-			tempFrameInt--;
-			if(tempFrameInt == 0){
-				tempFrameInt = tempMaxFrame;
-			}
-			ArrayList tempList3 = new ArrayList(MoveItMain.instance.returnLFrames());
+			
+			tempList3 = new ArrayList(MoveItMain.instance.returnLFrames());
 			for(int b = 0; b < tempList3.size(); b++){
 				ArrayList tempList4 = new ArrayList((ArrayList) tempList3.get(b));
 				if(tempUUID == (UUID) tempList4.get(1) && tempFrameInt == (Integer) tempList4.get(3)){
@@ -765,11 +793,14 @@ public class MoveItCommand implements CommandExecutor, Listener{
 						UUID tempUUID3 = (UUID) tempList6.get(5);
 						if(tempUUID.toString() == tempUUID3.toString() || tempUUID2.toString().equals(tempUUID3.toString()) || tempUUID2 == tempUUID3){
 							//MoveItMain.instance.getServer().broadcastMessage("Add to toPlayList...");
-							toRemoveList.add(tempList5.get(c));
+							toPlayList.add(tempList5.get(c));
+
 						}
 					}
 				}
 			}
+			
+			
 		}
 		
 		//MoveItMain.instance.getServer().broadcastMessage("toRemoveList size "+Integer.toString(toRemoveList.size())+"...");
@@ -794,7 +825,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		//}
 		
 		
-		for(int a = 0; a < tempList.size(); a++){
+		/*for(int a = 0; a < tempList.size(); a++){
 			
 			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
 			UUID tempUUID = UUID.randomUUID();
@@ -805,6 +836,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			ArrayList animPos = new ArrayList((ArrayList) MoveItMain.instance.animationPositionList(tempUUID));
 			tempFrameInt =(Integer) animPos.get(1);
 			playMode = (String) animPos.get(2);
+			//tempFrameInt++;
 			if(tempFrameInt > tempMaxFrame){
 				tempFrameInt = 1;
 			}	
@@ -824,11 +856,14 @@ public class MoveItCommand implements CommandExecutor, Listener{
 						if(tempUUID.toString() == tempUUID3.toString() || tempUUID2.toString().equals(tempUUID3.toString()) || tempUUID2 == tempUUID3){
 							//MoveItMain.instance.getServer().broadcastMessage("Add to toPlayList...");
 							toPlayList.add(tempList5.get(c));
+
 						}
 					}
 				}
 			}
-		}
+			
+		}*/
+		
 		
 		//MoveItMain.instance.getServer().broadcastMessage("toPlayList size "+Integer.toString(toPlayList.size())+"...");
 		/*for(int d = 0; d < toPlayList.size(); d++){
@@ -845,12 +880,43 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			World world = MoveItMain.instance.getServer().getWorld(worldString);
 			Block tempBlock = world.getBlockAt(Integer.parseInt(tempCoord[0]), Integer.parseInt(tempCoord[1]), Integer.parseInt(tempCoord[2])); 
 			*/
-			
+			ArrayList finList = new ArrayList((ArrayList) MoveItMain.instance.returnLAnimationPosition());
+			ArrayList finPlayList = new ArrayList((ArrayList) MoveItMain.instance.returnLPlayList());
+			ArrayList tempAnimList = new ArrayList(0);
+			for(int a = 0; a < finPlayList.size(); a++){
+				ArrayList tempfinList = new ArrayList((ArrayList) finPlayList.get(a));
+				UUID playUUID = (UUID) tempfinList.get(0);
+				int playMaxInt = (Integer) tempfinList.get(2);
+				for(int b = 0; b < finList.size(); b++){
+					ArrayList tempfinList3 = new ArrayList((ArrayList) finList.get(b));
+					UUID animUUID = (UUID) tempfinList3.get(0);
+					int curFrame = (Integer) tempfinList3.get(1);
+					String finPlayMode = (String) tempfinList3.get(2);
+					if(playUUID == animUUID){
+
+						if(curFrame == playMaxInt){
+							MoveItMain.instance.addIndexAnimationPosition(animUUID, 1, finPlayMode);
+							//MoveItMain.instance.getServer().broadcastMessage("Frame: " + Integer.toString(1));	
+						}else
+						{
+							
+							MoveItMain.instance.addIndexAnimationPosition(animUUID, curFrame + 1, finPlayMode);
+							//MoveItMain.instance.getServer().broadcastMessage("Frame: " + curFrame + 1);
+						}
+						
+					}
+				}
+				
+			}
+
+
+
+	
 			placeBlock(toPlayList, toRemoveList);
-			MoveItMain.instance.addIndexAnimationPosition(finUUID, tempFrameInt++, playMode);
+			
 			//tempBlock.setType(tempMat);
 			//tempBlock.setData(tempData);
-			//MoveItMain.instance.getServer().broadcastMessage("Place block...");
+			//MoveItMain.instance.getServer().broadcastMessage("Place block..." + Integer.toString(tempFrameInt));
 		 //}
 
 		
@@ -932,26 +998,26 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	public void onPlayerInteractEvent(PlayerInteractEvent event){
 		Player player = event.getPlayer();
 		updatePlayerSelection(player);
-		player.sendMessage(Integer.toString(pwand));
-		MoveItMain.instance.getServer().broadcastMessage(Integer.toString(player.getItemInHand().getTypeId()));
-		MoveItMain.instance.getServer().broadcastMessage(player.getItemInHand().getType().name());
+		//player.sendMessage(Integer.toString(pwand));
+		//MoveItMain.instance.getServer().broadcastMessage(Integer.toString(player.getItemInHand().getTypeId()));
+		//MoveItMain.instance.getServer().broadcastMessage(player.getItemInHand().getType().name());
 			if(player.getItemInHand().getType() == Material.SHEARS){
-				MoveItMain.instance.getServer().broadcastMessage("Wand_CLick");
+				//MoveItMain.instance.getServer().broadcastMessage("Wand_CLick");
 				if(event.getAction() == Action.LEFT_CLICK_BLOCK){
-					MoveItMain.instance.getServer().broadcastMessage("left_Wand_CLick");
+					//MoveItMain.instance.getServer().broadcastMessage("left_Wand_CLick");
 					if(pwand == 1){
 
-						MoveItMain.instance.getServer().broadcastMessage("wand_enabled");
+						//MoveItMain.instance.getServer().broadcastMessage("wand_enabled");
 						createNewFrameBlocks(player);
 						event.setCancelled(true);
 				}
 			}
 			
 				if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
-					MoveItMain.instance.getServer().broadcastMessage("Right_Wand_CLick");
+					//MoveItMain.instance.getServer().broadcastMessage("Right_Wand_CLick");
 					if(pwand == 1){
 
-						MoveItMain.instance.getServer().broadcastMessage("wand_enabled");
+						//MoveItMain.instance.getServer().broadcastMessage("wand_enabled");
 						removeFrameBlocks(player);
 						event.setCancelled(true);
 				}
