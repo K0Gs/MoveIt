@@ -40,6 +40,7 @@ public class MoveItMain extends JavaPlugin{
 	public ArrayList frames = new ArrayList();
 	public ArrayList selections = new ArrayList();
 	public ArrayList playList = new ArrayList();
+	public ArrayList animationPosition = new ArrayList();
 	public int wand_tool = 0;
 	public YamlConfiguration config = null;
 	//Animations animations = new Animations();
@@ -466,7 +467,7 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 		return this.selections;
 	}
 	
-public void addIndexPlayList(UUID animUUID, int frame, int frameMax){
+	public void addIndexPlayList(UUID animUUID, int frame, int frameMax){
 		
 		ArrayList tList = new ArrayList();
 		tList.add(animUUID);
@@ -475,7 +476,7 @@ public void addIndexPlayList(UUID animUUID, int frame, int frameMax){
 		this.playList.add(tList);
 	}
 
-public String removePlayList(UUID uuid, String dummy){
+	public String removePlayList(UUID uuid, String dummy){
 	int count = 0;
 	ArrayList tempList = new ArrayList((ArrayList) this.frames);
 		for (int a = tempList.size() - 1; a > -1; a--){
@@ -490,9 +491,50 @@ public String removePlayList(UUID uuid, String dummy){
 		}
 		
 	return Integer.toString(count);
-}
+	}
 
 	public ArrayList returnLPlayList(){
 	return this.playList;
-}
+	}
+	
+	public void addIndexAnimationPosition(UUID animUUID, int lastFrame, String playMode){
+		
+		removePlayMode(animUUID);
+		ArrayList tList = new ArrayList();
+		tList.add(animUUID);
+		tList.add(lastFrame);
+		tList.add(playMode);
+		this.animationPosition.add(tList);
+	}
+	
+	public ArrayList animationPositionList(UUID animUUID){
+		ArrayList tempList = new ArrayList((ArrayList) animationPosition);
+		ArrayList returnList = new ArrayList();
+		for(int a = 0; a < tempList.size(); a++){
+			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+			UUID tempUUID = (UUID) tempList2.get(0);
+			if(animUUID.toString() == tempUUID.toString() || animUUID.toString().equals(tempUUID.toString()) || animUUID == tempUUID){
+				returnList = new ArrayList((ArrayList) tempList.get(a));
+			}
+		}
+		return returnList;
+	}
+	
+	public void removePlayMode(UUID animUUID){
+		ArrayList tempList = new ArrayList((ArrayList) animationPosition);
+		ArrayList returnList = new ArrayList();
+		for(int a = tempList.size()-1; a > -1; a--){
+			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+			UUID tempUUID = (UUID) tempList2.get(0);
+			if(animUUID.toString() == tempUUID.toString() || animUUID.toString().equals(tempUUID.toString()) || animUUID == tempUUID){
+				animationPosition.remove(a);
+			}
+		}
+
+	}
+	
+	public ArrayList returnLAnimationPosition(){
+	return this.animationPosition;
+	}
+	
 }
