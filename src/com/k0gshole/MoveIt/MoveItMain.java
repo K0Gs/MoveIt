@@ -390,8 +390,12 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 		ArrayList tempList2 = new ArrayList();
 		for(int a = 0; a < this.frames.size(); a++){
 			tempList = new ArrayList((ArrayList) this.frames.get(a));
-			if(uuid.equals((UUID) tempList.get(1))){
-			tempList2.add((UUID) tempList.get(2));
+			UUID tempUUID = UUID.randomUUID();
+			if((UUID) tempList.get(1) != null){
+				tempUUID = (UUID) tempList.get(1);
+			}
+			if(uuid.equals(tempUUID)){
+				tempList2.add((UUID) tempList.get(2));
 			}
 		}
 		
@@ -548,8 +552,11 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 			for (int a = 0;a < this.animationPosition.size();a++){
 				ArrayList tempList = new ArrayList((ArrayList) this.animationPosition.get(a));
 				//UUID tempInst2 = (UUID)tempList.get(2);
-
-				if(uuid.equals((UUID)tempList.get(2))){
+				UUID tempUUID = UUID.randomUUID();
+				if((UUID) tempList.get(0) != null){
+					tempUUID = (UUID) tempList.get(0);
+				}
+				if(uuid.equals(tempUUID)){
 					this.animationPosition.remove(a);
 					count++;
 				}
