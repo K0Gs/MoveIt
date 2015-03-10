@@ -896,7 +896,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 
 						if(curFrame == playMaxInt){
 							MoveItMain.instance.addIndexAnimationPosition(animUUID, 1, finPlayMode);
-							//MoveItMain.instance.getServer().broadcastMessage("Frame: " + Integer.toString(1));	
+							MoveItMain.instance.getServer().broadcastMessage("Frame: " + Integer.toString(1));	
 						}else
 						{
 							
