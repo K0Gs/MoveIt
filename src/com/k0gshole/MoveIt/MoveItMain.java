@@ -5,11 +5,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 
 import net.milkbowl.vault.permission.Permission;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,9 +22,18 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
+
+import net.minecraft.server.v1_8_R2.BlockPosition;
+import net.minecraft.server.v1_8_R2.EntityFallingBlock;
+import net.minecraft.server.v1_8_R2.EntityTypes;
+import net.minecraft.server.v1_8_R2.WorldServer;
+
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 
 
 public class MoveItMain extends JavaPlugin{
@@ -44,6 +56,10 @@ public class MoveItMain extends JavaPlugin{
 	public ArrayList animationPosition = new ArrayList();
 	public int wand_tool = 0;
 	public YamlConfiguration config = null;
+	public Block playBlock = null;
+	public Material playMat = Material.AIR;
+	public Byte playByte = new Byte((byte) 0);
+	
 	//Animations animations = new Animations();
 	//Frames frames = new Frames();
 	//FrameBlocks frameBlocks = new FrameBlocks();
@@ -59,6 +75,7 @@ public class MoveItMain extends JavaPlugin{
 	
 	@EventHandler
 	public void onEnable(){
+		//registerEntityType(NewFloatingBlock.class, "FallingBlock", 21);
 		instance = this;
 		instance.getServer().broadcastMessage("[MoveIt] Now Loading...]");
 		
@@ -115,6 +132,7 @@ public class MoveItMain extends JavaPlugin{
         return perms != null;
     }
 
+
 	private void registerGameTickEvent(){
 		Bukkit.getScheduler().runTaskTimer(this, new Runnable(){
 		public void run(){
@@ -123,35 +141,7 @@ public class MoveItMain extends JavaPlugin{
 		}, 1, 1);
 	}
 	
-	public void dataToFile(ArrayList arrayOut, String theFile) {
-		instance.getServer().broadcastMessage(arrayOut.toString());
-		AlphaWriteFile write = new AlphaWriteFile(thePath+theFile, false);
-		try {
-			write.writeToFile(arrayOut);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public ArrayList dataFromFile(String file) {
-		String filePath = thePath + file;
-		AlphaReadFile read = new AlphaReadFile(filePath);
-		ArrayList tempList = new ArrayList();
-		try {
-			tempList = new ArrayList(read.OpenFile());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//instance.getServer().broadcastMessage(tempList.toString());
-		return tempList;
-	}
-	
+
 
 
 	public void addIndexAnimation(String animName, UUID player, UUID uuid, String now){
@@ -567,3 +557,5 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 	}
 	
 }
+
+

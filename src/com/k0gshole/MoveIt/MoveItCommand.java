@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -677,18 +678,18 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	}
 	
 	public void removeFrameBlocks(Player player){
-		if(player.getTargetBlock(null, 15).isEmpty()){
+		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
 			player.sendMessage("You need to be looking at a block within a radius of 15...");
 			//return false;
 		}
-		String blockCount = MoveItMain.instance.removeBlock(player.getTargetBlock(null, 15), pFrameUuid);
+		String blockCount = MoveItMain.instance.removeBlock(player.getTargetBlock((HashSet<Byte>) null, 15), pFrameUuid);
 
 		player.sendMessage(blockCount + " block(s) have been deleted...");
 		//return true;
 	
 	}
 	public void createNewFrameBlocks(Player player){
-		if(player.getTargetBlock(null, 15).isEmpty()){
+		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
 			player.sendMessage("You need to be looking at a block within a radius of 15...");
 			//return false;
 		}
@@ -697,7 +698,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			player.sendMessage("You must have an animation selected...");
 			//return false;
 		}
-		Block tempBlock = player.getTargetBlock(null, 15);
+		Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
 		String tempWorld = tempBlock.getWorld().getName();
 		String tempCoord = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
 		//player.sendMessage(tempCoord);
@@ -962,6 +963,11 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			//schedulePlaceBlocks(tempBlock, tempMat, tempData);
 			tempBlock.setType(tempMat);
 			tempBlock.setData(tempData);
+			//MoveItMain.instance.playBlock = tempBlock;
+			///MoveItMain.instance.playMat = tempMat;
+			//MoveItMain.instance.playByte = tempData;
+			
+			//MoveItMain.instance.spawnFallingBlock(MoveItMain.instance.playBlock.getLocation(), MoveItMain.instance.playMat, MoveItMain.instance.playByte);
 			//MoveItMain.instance.getServer().broadcastMessage("Place block...");
 		}
 		
