@@ -11,18 +11,27 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 
+import net.minecraft.server.v1_8_R2.Entity;
+import net.minecraft.server.v1_8_R2.WorldServer;
+
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import com.k0gshole.MoveIt.NewFloatingBlock.*;
 
 public class MoveItCommand implements CommandExecutor, Listener{
 
@@ -37,7 +46,15 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	public Block pFrameBlock;
 	public int pwand;
 	public ArrayList pSelections;
-
+	public Material floatMat = null;
+	public Byte floatByte = new Byte((byte) 0);
+	public Location floatLocation = null;
+	NewFloatingBlock entity = null;
+	//public static double d0 = 0;
+	//public static double d1 = 0;
+	//public static double d2 = 0;
+	//public static int playInt = 0;
+	//public static net.minecraft.server.v1_8_R2.Block playBlock = null;
 	
 	int count = 0;
 	int count2 = 0;
@@ -173,6 +190,30 @@ public class MoveItCommand implements CommandExecutor, Listener{
 				if(arg2[1].equalsIgnoreCase("block")){
 					createNewFrameBlocks(player);
 
+				}
+				
+				if(arg2[1].equalsIgnoreCase("float")){
+					if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
+						player.sendMessage("You need to be looking at a block within a radius of 15...");
+						//return false;
+					}
+					ArrayList plSelec = new ArrayList(MoveItMain.instance.returnPlayerPSelect(player.getUniqueId()));
+					if(plSelec.size() == 0){
+						player.sendMessage("You must have an animation selected...");
+						//return false;
+					}
+					Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
+					String tempWorld = tempBlock.getWorld().getName();
+					World realWorld = tempBlock.getWorld(); 
+					 floatMat = tempBlock.getType();
+					 floatByte = tempBlock.getData();
+					 floatLocation = tempBlock.getLocation();
+					
+					//tempBlock.setType(Material.AIR);
+					//tempBlock.setData(new Byte((byte) 0));
+					
+					spawnFallingBlock(floatLocation, floatMat, floatByte);
+					//entity.teleportTo(floatLocation, false);
 				}
 			}
 			if (arg2[0].equalsIgnoreCase("delete")){
@@ -545,6 +586,35 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		return false;
 	}
 
+	public NewFloatingBlock spawnFallingBlock(Location location, org.bukkit.Material material, byte data) throws IllegalArgumentException {
+        Validate.notNull(location, "Location cannot be null");
+        Validate.notNull(material, "Material cannot be null");
+        Validate.isTrue(material.isBlock(), "Material must be a block");
+
+        
+
+        double x = location.getBlockX() + 0.5;
+        double y = location.getBlockY() + 1.5;
+        double z = location.getBlockZ() + 0.5;
+        WorldServer world = ((CraftWorld)location.getWorld()).getHandle();
+        //NewFloatingBlock temptrans = new NewFloatingBlock(world);
+        com.k0gshole.MoveIt.NewFloatingBlock.d0 = x;
+        com.k0gshole.MoveIt.NewFloatingBlock.d1 = y;
+        com.k0gshole.MoveIt.NewFloatingBlock.d2 = z;
+        com.k0gshole.MoveIt.NewFloatingBlock.playBlock = net.minecraft.server.v1_8_R2.Block.getById(material.getId()).getBlockData();
+        com.k0gshole.MoveIt.NewFloatingBlock.playInt = data;
+        //com.k0gshole.MoveIt.NewFloatingBlock.dataTest(world);
+        //MoveItMain.instance.getServer().broadcastMessage(Double.toString(d0) + " " + Double.toString(d1) + " " +Double.toString(d2) + " " + playBlock.getName() + " " + Integer.toString(playInt));
+        //MoveItMain.instance.getServer().broadcastMessage(testData);
+        //NewFloatingBlock entity = new NewFloatingBlock(world, "null");
+
+        entity = new NewFloatingBlock(world, 0);
+        entity.ticksLived = 1;
+
+        world.addEntity(entity, SpawnReason.CUSTOM);
+        return entity;
+    }
+	
 	public void loadArrays(){
 		try {
 			MoveItMain.instance.setArrayAnimation(OpenFile("animations.dat"));
@@ -707,6 +777,8 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		player.sendMessage("The block has been added...");
 		//return true;
 	}
+	
+	
 	
 	public void updatePlayerSelection(Player player){
 		pSelections = new ArrayList((ArrayList) MoveItMain.instance.returnPlayerPSelect(player.getUniqueId()));
@@ -961,13 +1033,13 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			
 			
 			//schedulePlaceBlocks(tempBlock, tempMat, tempData);
-			tempBlock.setType(tempMat);
-			tempBlock.setData(tempData);
+			//tempBlock.setType(tempMat);
+			//tempBlock.setData(tempData);
 			//MoveItMain.instance.playBlock = tempBlock;
 			///MoveItMain.instance.playMat = tempMat;
 			//MoveItMain.instance.playByte = tempData;
 			
-			//MoveItMain.instance.spawnFallingBlock(MoveItMain.instance.playBlock.getLocation(), MoveItMain.instance.playMat, MoveItMain.instance.playByte);
+			spawnFallingBlock(tempBlock.getLocation(), MoveItMain.instance.playMat, MoveItMain.instance.playByte);
 			//MoveItMain.instance.getServer().broadcastMessage("Place block...");
 		}
 		

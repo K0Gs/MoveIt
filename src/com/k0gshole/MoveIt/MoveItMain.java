@@ -56,10 +56,13 @@ public class MoveItMain extends JavaPlugin{
 	public ArrayList animationPosition = new ArrayList();
 	public int wand_tool = 0;
 	public YamlConfiguration config = null;
-	public Block playBlock = null;
+	public net.minecraft.server.v1_8_R2.Block playBlock = null;
 	public Material playMat = Material.AIR;
 	public Byte playByte = new Byte((byte) 0);
-	
+	public double d0 = 0;
+	public double d1 = 0;
+	public double d2 = 0;
+	public int playInt = 0;
 	//Animations animations = new Animations();
 	//Frames frames = new Frames();
 	//FrameBlocks frameBlocks = new FrameBlocks();
@@ -75,7 +78,6 @@ public class MoveItMain extends JavaPlugin{
 	
 	@EventHandler
 	public void onEnable(){
-		//registerEntityType(NewFloatingBlock.class, "FallingBlock", 21);
 		instance = this;
 		instance.getServer().broadcastMessage("[MoveIt] Now Loading...]");
 		
@@ -114,7 +116,8 @@ public class MoveItMain extends JavaPlugin{
 		
 		MoveItCommand loadFile = new MoveItCommand();
 		loadFile.loadArrays();
-		
+
+		registerEntityType(NewFloatingBlock.class, "FallingBlock", 21);
 	}
 	
 	@EventHandler
@@ -142,8 +145,59 @@ public class MoveItMain extends JavaPlugin{
 	}
 	
 
+	/**
+	 * Registers custom entity class at the native minecraft entity enum
+	 * 
+	 * @param inClass	class of the entity
+	 * @param name		minecraft entity name
+	 * @param inID		minecraft entity id
+	 */
+	public static void registerEntityType(Class<?> inClass, String name, int inID)
+	{
+		try
+		{
+            @SuppressWarnings("rawtypes")
+            Class[] args = new Class[3];
+            args[0] = Class.class;
+            args[1] = String.class;
+            args[2] = int.class;
+ 
+            a(inClass, name, inID);
+        }
+		catch (Exception e)
+		{
+            e.printStackTrace();
+        }
+	}
+	
+	/*
+	 * Since 1.7.2 added a check in their entity registration, simply bypass it and write to the maps ourself.
+	 */
+	private static void a(Class paramClass, String paramString, int paramInt)
+	{
+		try
+		{
+			((Map) getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
+			((Map) getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
+			((Map) getPrivateStatic(EntityTypes.class, "e")).put(Integer.valueOf(paramInt), paramClass);
+			((Map) getPrivateStatic(EntityTypes.class, "f")).put(paramClass, Integer.valueOf(paramInt));
+			((Map) getPrivateStatic(EntityTypes.class, "g")).put(paramString, Integer.valueOf(paramInt));
+		}
+		catch (Exception exc)
+		{
+			// Unable to register the new class.
+		}
+	}
+	
+	private static Object getPrivateStatic(Class clazz, String f) throws Exception
+	{
+		Field field = clazz.getDeclaredField(f);
+		field.setAccessible(true);
+		return field.get(null);
+	}
 
 
+	
 	public void addIndexAnimation(String animName, UUID player, UUID uuid, String now){
 		
 		ArrayList tList = new ArrayList();
