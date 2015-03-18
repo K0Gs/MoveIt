@@ -13,7 +13,7 @@ import org.bukkit.craftbukkit.v1_8_R2.event.CraftEventFactory;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
-public class NewFloatingBlock extends Entity {
+public class NewFloatingBlock extends EntityFallingBlock {
 	public static double d0;
 
 	public static double d1;
@@ -29,7 +29,7 @@ public class NewFloatingBlock extends Entity {
     private IBlockData block;
     public int ticksLived;
     public int data;
-    public boolean dropItem = true;
+    public boolean dropItem = false;
     private boolean e;
     private boolean hurtEntities;
     private int fallHurtMax = 40;
@@ -49,7 +49,7 @@ public class NewFloatingBlock extends Entity {
     	
     	super(world);
         this.block = playBlock;
-        this.dropItem = true;
+        this.dropItem = false;
         this.fallHurtMax = 40;
         this.fallHurtAmount = 2.0f;
         this.k = true;
@@ -161,8 +161,8 @@ public class NewFloatingBlock extends Entity {
                             }
                         }
                     }
-                } else if (((this.ticksLived > 100 && !this.world.isClientSide && (blockposition.getY() < 1 || blockposition.getY() > 256) || this.ticksLived > 600) &&
-                	(!this.ignoreGravity)))
+                } else if (((this.ticksLived > 5 && !this.world.isClientSide && (blockposition.getY() < 1 || blockposition.getY() > 256) || this.ticksLived > 600) &&
+                	(this.ignoreGravity)))
                 	{
                 	if (this.dropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
                         this.a(new ItemStack(block, 1, block.getDropData(this.block)), 0.0F);

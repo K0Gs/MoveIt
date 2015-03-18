@@ -122,7 +122,12 @@ public class MoveItMain extends JavaPlugin{
 	
 	@EventHandler
 	public void onDisable(){
+		ArrayList stopList = new ArrayList((ArrayList) animationsList());
 		MoveItCommand saveDat = new MoveItCommand();
+		for(int a = 0; a < stopList.size(); a++){
+			saveDat.stopPlay((String) stopList.get(a)); 
+		}
+		
 		saveDat.saveArrays();
 		instance.getServer().broadcastMessage("[MoveIt] Good bye...");
 	
@@ -248,6 +253,20 @@ public class MoveItMain extends JavaPlugin{
 		}
 	}
 	
+	public ArrayList animationsList(){
+		ArrayList tempList = new ArrayList(animation);
+		//Player player = Player.this.getPlayer().
+		//player.sendMessage("Animations: ");
+		ArrayList returnList = new ArrayList();
+		for(int a = 0; a < tempList.size(); a++){
+			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
+			//player.sendMessage((String) tempList2.get(0));
+			returnList.add((String) tempList2.get(0));
+			
+		}
+		return returnList;
+	}
+	
 	public void clearDataAnimation(){
 		this.animation.clear();
 		//MoveItMain.instance.getServer().broadcastMessage("Clear Data");
@@ -261,7 +280,7 @@ public class MoveItMain extends JavaPlugin{
 		this.animation = new ArrayList((ArrayList) newArray);
 	}
 	
-	public void addIndexFrameBlocks(Material block, Byte data, String loc, String world, UUID player, UUID frameUuid, String now){
+	public void addIndexFrameBlocks(Material block, Byte data, String loc, String world, UUID player, UUID frameUuid, UUID entityUUID, String now){
 
 		ArrayList tList = new ArrayList();
 		tList.add(block);
@@ -270,6 +289,7 @@ public class MoveItMain extends JavaPlugin{
 		tList.add(world);
 		tList.add(player);
 		tList.add(frameUuid);
+		tList.add(entityUUID);
 		tList.add(now);
 		this.frameblocks.add(tList);
 	}
