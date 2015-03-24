@@ -13,7 +13,7 @@ import org.bukkit.craftbukkit.v1_8_R2.event.CraftEventFactory;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.util.Vector;
 
-public class NewFloatingBlock extends EntityFallingBlock {
+public class NewFloatBlock extends EntityFallingBlock {
 	public static double d0;
 
 	public static double d1;
@@ -36,15 +36,15 @@ public class NewFloatingBlock extends EntityFallingBlock {
     private float fallHurtAmount = 2.0F;
     public NBTTagCompound tileEntityData;
 
-    public NewFloatingBlock(World world) {
+    public NewFloatBlock(World world) {
         super(world);
     }
 
-    public NewFloatingBlock(World world, double d0, double d1, double d2, IBlockData iblockdata) {
+    public NewFloatBlock(World world, double d0, double d1, double d2, IBlockData iblockdata) {
     	this(world, 0);
     }
     
-    public NewFloatingBlock(World world, int i) {
+    public NewFloatBlock(World world, int i) {
         
     	
     	super(world);
@@ -74,16 +74,18 @@ public class NewFloatingBlock extends EntityFallingBlock {
     public boolean ad() {
         return !this.dead;
     }
-
+    @Override
     public void t_() {
         Block block = this.block.getBlock();
-
+        
+        
         if (block.getMaterial() == Material.AIR) {
             this.die();
         } else {
-            this.lastX = this.locX;
-            this.lastY = this.locY;
-            this.lastZ = this.locZ;
+
+            this.lastX = MathHelper.floor(this.locX);
+            this.lastY = MathHelper.floor(this.locY);
+            this.lastZ = MathHelper.floor(this.locZ);
             BlockPosition blockposition;
 
 
@@ -105,14 +107,14 @@ public class NewFloatingBlock extends EntityFallingBlock {
 			{
 				this.motY -= 0.03999999910593033D;
 			}
-            this.move(this.motX, this.motY, this.motZ);
-            this.motX *= 0.9800000190734863D;
+            //this.move(this.motX, this.motY, this.motZ);
+            //this.motX *= 0.9800000190734863D;
 			if (!this.ignoreGravity)
 			{
 				this.motY -= 0.03999999910593033D;
 			}
-            this.motZ *= 0.9800000190734863D;
-            if (!this.world.isClientSide) {
+            //this.motZ *= 0.9800000190734863D;
+            if (!this.world.isClientSide && !this.ignoreGravity) {
                 blockposition = new BlockPosition(this);
                 if (this.onGround) {
                     this.motX *= 0.699999988079071D;
@@ -162,7 +164,7 @@ public class NewFloatingBlock extends EntityFallingBlock {
                         }
                     }
                 } else if (((this.ticksLived > 5 && !this.world.isClientSide && (blockposition.getY() < 1 || blockposition.getY() > 256) || this.ticksLived > 600) &&
-                	(this.ignoreGravity)))
+                	(!this.ignoreGravity)))
                 	{
                 	if (this.dropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
                         this.a(new ItemStack(block, 1, block.getDropData(this.block)), 0.0F);
@@ -173,6 +175,7 @@ public class NewFloatingBlock extends EntityFallingBlock {
             }
 
         }
+    
     }
 
     public void e(float f, float f1) {
@@ -210,6 +213,8 @@ public class NewFloatingBlock extends EntityFallingBlock {
 
     }
 
+
+    
     protected void b(NBTTagCompound nbttagcompound) {
         Block block = this.block != null ? this.block.getBlock() : Blocks.AIR;
         MinecraftKey minecraftkey = (MinecraftKey) Block.REGISTRY.c(block);

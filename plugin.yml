@@ -8,5 +8,5 @@ depend: [Vault]
 commands:
    moveit:     
       description: Open The Gui.
-      usage: /gui, /gui invsee <player> 
+      usage: /moveit create [animation, frame, block] <name>, /moveit delete [animation or frame], /moveit list [animation or frame], /moveit select [animation or frame] <name or number>, /moveit play <name>, /moveit stop <name>
 

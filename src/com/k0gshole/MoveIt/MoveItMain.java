@@ -48,6 +48,7 @@ public class MoveItMain extends JavaPlugin{
 	public File framesFile = new File("plugins/MoveIt/frames.dat");
 	public File frameBlocksFile = new File("plugins/MoveIt/frameBlocks.dat");
 	public File animationPositionFile = new File("plugins/MoveIt/animationPosition.dat");
+	public File playListFile = new File("plugins/MoveIt/playList.dat");
 	public ArrayList animation = new ArrayList();
 	public ArrayList frameblocks = new ArrayList();
 	public ArrayList frames = new ArrayList();
@@ -110,6 +111,11 @@ public class MoveItMain extends JavaPlugin{
 			getInstance().saveResource("animationPosition.dat", false);
 		}
 		
+		if(!playListFile.exists()){
+
+			getInstance().saveResource("playList.dat", false);
+		}
+		
 		config = YamlConfiguration.loadConfiguration(configyml);
 		wand_tool = config.getInt("wand_tool");
 		
@@ -117,7 +123,7 @@ public class MoveItMain extends JavaPlugin{
 		MoveItCommand loadFile = new MoveItCommand();
 		loadFile.loadArrays();
 
-		registerEntityType(NewFloatingBlock.class, "FallingBlock", 21);
+		registerEntityType(NewFloatBlock.class, "FallingSand", 21);
 	}
 	
 	@EventHandler
@@ -280,7 +286,7 @@ public class MoveItMain extends JavaPlugin{
 		this.animation = new ArrayList((ArrayList) newArray);
 	}
 	
-	public void addIndexFrameBlocks(Material block, Byte data, String loc, String world, UUID player, UUID frameUuid, UUID entityUUID, String now){
+	public void addIndexFrameBlocks(Material block, Byte data, String loc, String world, UUID player, UUID frameUuid, String now){
 
 		ArrayList tList = new ArrayList();
 		tList.add(block);
@@ -289,7 +295,6 @@ public class MoveItMain extends JavaPlugin{
 		tList.add(world);
 		tList.add(player);
 		tList.add(frameUuid);
-		tList.add(entityUUID);
 		tList.add(now);
 		this.frameblocks.add(tList);
 	}
@@ -569,6 +574,10 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 
 	public ArrayList returnLPlayList(){
 	return this.playList;
+	}
+	
+	public void setArrayPlayList(ArrayList newArray){
+		this.playList = new ArrayList((ArrayList) newArray);
 	}
 	
 	public void addIndexAnimationPosition(UUID animUUID, int lastFrame, String playMode){

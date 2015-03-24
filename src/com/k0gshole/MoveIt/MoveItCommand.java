@@ -25,15 +25,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftFallingSand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-import com.k0gshole.MoveIt.NewFloatingBlock.*;
+import com.k0gshole.MoveIt.NewFloatBlock.*;
 
 public class MoveItCommand implements CommandExecutor, Listener{
 
@@ -51,7 +53,8 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	public Material floatMat = null;
 	public Byte floatByte = new Byte((byte) 0);
 	public Location floatLocation = null;
-	NewFloatingBlock entity = null;
+	NewFloatBlock entity = null;
+	//boolean up = true;
 	//public static double d0 = 0;
 	//public static double d1 = 0;
 	//public static double d2 = 0;
@@ -592,8 +595,30 @@ public class MoveItCommand implements CommandExecutor, Listener{
 				
 		}
 	}
+	
+	public void floatBlocks(){
+		List worldList = MoveItMain.instance.getServer().getWorlds();
+		for(int a = 0; a < worldList.size(); a++){
+			
+			List entityList = ((World) worldList.get(a)).getEntities();
+		for(int f = 0; f < entityList.size(); f++){
+			if( ((org.bukkit.entity.Entity) entityList.get(f)).getType().getTypeId() == 21){
+				//((org.bukkit.entity.Entity) entityList.get(f)).remove();
+				
+				//NewFloatBlock fb = (NewFloatBlock) ((CraftFallingSand) entityList.get(f)).getHandle();
+					
+	        		
+	        		//fb.setVelocity(fb.getBukkitEntity().getVelocity().multiply(-1));
+	        		//MoveItMain.instance.getServer().broadcastMessage("Float that block...");
+	        		//((CraftFallingSand)entityList.get(f)).getHandle().getBukkitEntity().setVelocity(((CraftFallingSand)entityList.get(f)).getHandle().getBukkitEntity().getVelocity().multiply(-1));;
+				((org.bukkit.entity.Entity) entityList.get(f)).setVelocity(((org.bukkit.entity.Entity) entityList.get(f)).getVelocity().multiply(-1));
+			}
 
-	public NewFloatingBlock spawnFallingBlock(Location location, org.bukkit.Material material, byte data, UUID frameUUID) throws IllegalArgumentException {
+		}
+		}
+	}
+
+	public NewFloatBlock spawnFallingBlock(Location location, org.bukkit.Material material, byte data, UUID frameUUID) throws IllegalArgumentException {
         Validate.notNull(location, "Location cannot be null");
         Validate.notNull(material, "Material cannot be null");
         Validate.isTrue(material.isBlock(), "Material must be a block");
@@ -605,35 +630,24 @@ public class MoveItCommand implements CommandExecutor, Listener{
         double z = location.getBlockZ() + 0.5;
         WorldServer world = ((CraftWorld)location.getWorld()).getHandle();
         //NewFloatingBlock temptrans = new NewFloatingBlock(world);
-        com.k0gshole.MoveIt.NewFloatingBlock.d0 = x;
-        com.k0gshole.MoveIt.NewFloatingBlock.d1 = y - 1.5;
-        com.k0gshole.MoveIt.NewFloatingBlock.d2 = z;
-        com.k0gshole.MoveIt.NewFloatingBlock.playBlock = net.minecraft.server.v1_8_R2.Block.getById(material.getId()).getBlockData();
-        com.k0gshole.MoveIt.NewFloatingBlock.playInt = data;
+        com.k0gshole.MoveIt.NewFloatBlock.d0 = x;
+        com.k0gshole.MoveIt.NewFloatBlock.d1 = y - 1.5;
+        com.k0gshole.MoveIt.NewFloatBlock.d2 = z;
+        com.k0gshole.MoveIt.NewFloatBlock.playBlock = net.minecraft.server.v1_8_R2.Block.getById(material.getId()).getBlockData();
+        com.k0gshole.MoveIt.NewFloatBlock.playInt = data;
         //com.k0gshole.MoveIt.NewFloatingBlock.dataTest(world);
         //MoveItMain.instance.getServer().broadcastMessage(Double.toString(d0) + " " + Double.toString(d1) + " " +Double.toString(d2) + " " + playBlock.getName() + " " + Integer.toString(playInt));
         //MoveItMain.instance.getServer().broadcastMessage(testData);
         //NewFloatingBlock entity = new NewFloatingBlock(world, "null");
 
-        entity = new NewFloatingBlock(world, 0);
+        entity = new NewFloatBlock(world, 0);
         entity.ticksLived = 1;
 
         world.addEntity(entity, SpawnReason.CUSTOM);
-		entity.setVelocity(new Vector(0,0.000000001,0));
+		entity.setVelocity(new Vector(0,0.09,0));
 		//MoveItMain.instance.getServer().broadcastMessage(entity.getUniqueID().toString());
         
-		ArrayList tempList = new ArrayList((ArrayList) MoveItMain.instance.returnLFrameBlocks());
-		for(int a = 0; a < tempList.size(); a++){
-			ArrayList tempList2 = new ArrayList((ArrayList) tempList.get(a));
-			UUID tempUUID = UUID.randomUUID();
-			if((UUID) tempList2.get(5) != null){
-				tempUUID = (UUID) tempList2.get(5);
-			}
-			if((UUID) tempList2.get(5) == frameUUID){
-				tempList2.set(6, entity.getUniqueID());
-				tempList.set(a, tempList2);
-			}
-		}
+
 		
 		return entity;
     }
@@ -678,6 +692,16 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
 		}
+		
+		try {
+			MoveItMain.instance.setArrayPlayList(OpenFile("playList.dat"));
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
 		//animations.store = new ArrayList(dataFromFile("animations.dat"));
 		//frames.store = new ArrayList(dataFromFile("frames.dat"));
 		//frameBlocks.store = new ArrayList(dataFromFile("frameBlocks.dat"));
@@ -688,14 +712,15 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		ArrayList tempList2 = new ArrayList((ArrayList) MoveItMain.instance.returnLFrames());
 		ArrayList tempList3 = new ArrayList((ArrayList) MoveItMain.instance.returnLFrameBlocks());
 		ArrayList tempList4 = new ArrayList((ArrayList) MoveItMain.instance.returnLAnimationPosition());
-
+		ArrayList tempList5 = new ArrayList((ArrayList) MoveItMain.instance.returnLPlayList());
+		
 		
 		try {
 			writeToFile(tempList, "animations.dat");
 			writeToFile(tempList2, "frames.dat");
 			writeToFile(tempList3, "frameBlocks.dat");
 			writeToFile(tempList4, "animationPosition.dat");
-
+			writeToFile(tempList5, "playList.dat");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -795,8 +820,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		String tempWorld = tempBlock.getWorld().getName();
 		String tempCoord = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
 		//player.sendMessage(tempCoord);
-		UUID nullUUID = UUID.randomUUID();
-		MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, nullUUID, Instant.now().toString());
+		MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, Instant.now().toString());
 		MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand);
 		player.sendMessage("The block has been added...");
 		//return true;
@@ -844,7 +868,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			int tempFrameInt2 = tempFrameInt - 1;
 			playMode = (String) animPos.get(2);
 			//tempFrameInt2--;
-			if(tempFrameInt2 == 0){
+			if(tempFrameInt2 <= 0){
 				tempFrameInt2 = tempMaxFrame;
 			}	
 
@@ -989,7 +1013,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 					UUID animUUID = (UUID) tempfinList3.get(0);
 					int curFrame = (Integer) tempfinList3.get(1);
 					String finPlayMode = (String) tempfinList3.get(2);
-					if(playUUID == animUUID){
+					if(playUUID.toString().equals(animUUID.toString()) || playUUID.toString() == animUUID.toString() || playUUID.equals(animUUID) || playUUID == animUUID){
 
 						if(curFrame == playMaxInt){
 							MoveItMain.instance.addIndexAnimationPosition(animUUID, 1, finPlayMode);
@@ -1034,21 +1058,21 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			//MoveItMain.instance.getServer().broadcastMessage("tempCoord..." + Integer.parseInt(tempCoord[0]) + " " + Integer.parseInt(tempCoord[1]) + " " + Integer.parseInt(tempCoord[2]));
 			World world = MoveItMain.instance.getServer().getWorld(worldString);
 			Block tempBlock = world.getBlockAt(Integer.parseInt(tempCoord[0]), Integer.parseInt(tempCoord[1]), Integer.parseInt(tempCoord[2])); 
-			UUID entityUUID = UUID.randomUUID();
-			entityUUID = (UUID) tempList7.get(6);
+
 			
 			List entityList = world.getEntities();
+
+			//schedulePlaceBlocks(toRemoveList);
+			tempBlock.setType(Material.AIR);
+			tempBlock.setData(new Byte((byte) 0));
 			for(int f = 0; f < entityList.size(); f++){
+				if( ((org.bukkit.entity.Entity) entityList.get(f)).getType().getTypeId() == 21){
+					((org.bukkit.entity.Entity) entityList.get(f)).remove();
+				}
 				//MoveItMain.instance.getServer().broadcastMessage(((org.bukkit.entity.Entity) entityList.get(f)).getUniqueId().toString());
 				//MoveItMain.instance.getServer().broadcastMessage(entityUUID.toString());
-				if( ((org.bukkit.entity.Entity) entityList.get(f)).getUniqueId() == entityUUID){
-					((Entity) entityList.get(f)).die();
-					MoveItMain.instance.getServer().broadcastMessage("Die Entity...");
-				}
+
 			}
-			//schedulePlaceBlocks(toRemoveList);
-			//tempBlock.setType(Material.AIR);
-			//tempBlock.setData(new Byte((byte) 0));
 			//MoveItMain.instance.getServer().broadcastMessage("Place block...");
 		}
 		
@@ -1088,13 +1112,19 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	}
 	
 
+
 	
 	@EventHandler
 	public void ongameTick(GameTickEvent event){
 		count++;
 		count2++;
+		int count3 = 0;
 		
-		if(count2 == 7){
+		if (count3 == 1){
+			floatBlocks();
+		}
+		
+		if(count2 == 5){
 			playFrames();
 			count2 = 0;
 		}
@@ -1108,6 +1138,8 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		
 		
 	}
+	
+
 	
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent event){
