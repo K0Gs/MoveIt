@@ -123,7 +123,7 @@ public class MoveItMain extends JavaPlugin{
 		MoveItCommand loadFile = new MoveItCommand();
 		loadFile.loadArrays();
 
-		registerEntityType(NewFloatBlock.class, "FallingSand", 21);
+		registerEntityType(NewFloatBlock.class, "FallingBlock", 21);
 	}
 	
 	@EventHandler
@@ -184,6 +184,7 @@ public class MoveItMain extends JavaPlugin{
 	/*
 	 * Since 1.7.2 added a check in their entity registration, simply bypass it and write to the maps ourself.
 	 */
+	@SuppressWarnings("unchecked")
 	private static void a(Class paramClass, String paramString, int paramInt)
 	{
 		try
@@ -200,7 +201,7 @@ public class MoveItMain extends JavaPlugin{
 		}
 	}
 	
-	private static Object getPrivateStatic(Class clazz, String f) throws Exception
+	public static Object getPrivateStatic(Class clazz, String f) throws Exception
 	{
 		Field field = clazz.getDeclaredField(f);
 		field.setAccessible(true);

@@ -11,25 +11,17 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R2.event.CraftEventFactory;
 import org.bukkit.event.player.PlayerTeleportEvent;
+//import org.bukkit.craftbukkit.event.CraftEventFactory; // CraftBukkit
 import org.bukkit.util.Vector;
 
 public class NewFloatBlock extends EntityFallingBlock {
-	public static double d0;
-
-	public static double d1;
-
-	public static double d2;
-
-	public static IBlockData playBlock;
-
-	public static byte playInt;
 
 	boolean ignoreGravity = true;
+	public int data;
 	
     private IBlockData block;
     public int ticksLived;
-    public int data;
-    public boolean dropItem = false;
+    public boolean dropItem = true;
     private boolean e;
     private boolean hurtEntities;
     private int fallHurtMax = 40;
@@ -40,21 +32,17 @@ public class NewFloatBlock extends EntityFallingBlock {
         super(world);
     }
 
-    public NewFloatBlock(World world, double d0, double d1, double d2, IBlockData iblockdata) {
-    	this(world, 0);
+    public NewFloatBlock(World world, double d0, double d1, double d2, IBlockData blockData) {
+
+    	this(world, d0, d1, d2, blockData, 0);
     }
-    
-    public NewFloatBlock(World world, int i) {
-        
-    	
-    	super(world);
-        this.block = playBlock;
-        this.dropItem = false;
-        this.fallHurtMax = 40;
-        this.fallHurtAmount = 2.0f;
+
+
+	public NewFloatBlock(World world, double d0, double d1, double d2, IBlockData iblockdata, int data) {
+        super(world);
+        this.block = iblockdata;
+        this.data = data;
         this.k = true;
-        this.data = playInt;
-        //a(0.98F, 0.98F);
         this.setSize(0.98F, 0.98F);
         this.setPosition(d0, d1, d2);
         this.motX = 0.0D;
@@ -63,9 +51,9 @@ public class NewFloatBlock extends EntityFallingBlock {
         this.lastX = d0;
         this.lastY = d1;
         this.lastZ = d2;
-    }
+	}
 
-    protected boolean s_() {
+	protected boolean s_() {
         return false;
     }
 
@@ -76,54 +64,48 @@ public class NewFloatBlock extends EntityFallingBlock {
     }
     @Override
     public void t_() {
+    	//super.t_();
         Block block = this.block.getBlock();
-        
-        
+
         if (block.getMaterial() == Material.AIR) {
             this.die();
         } else {
-
-            this.lastX = MathHelper.floor(this.locX);
-            this.lastY = MathHelper.floor(this.locY);
-            this.lastZ = MathHelper.floor(this.locZ);
+            this.lastX = this.locX;
+            this.lastY = this.locY;
+            this.lastZ = this.locZ;
             BlockPosition blockposition;
-
 
             if (this.ticksLived++ == 0) {
                 blockposition = new BlockPosition(this);
                 if (this.world.getType(blockposition).getBlock() == block && !CraftEventFactory.callEntityChangeBlockEvent(this, blockposition.getX(), blockposition.getY(), blockposition.getZ(), Blocks.AIR, 0).isCancelled()) {
-                	if (!this.ignoreGravity){
+                	if (!this.ignoreGravity) {
                 	this.world.setAir(blockposition);
-                }
+                	}
                 } else if (!this.world.isClientSide) {
-                	if (!this.ignoreGravity){
-                	this.die();
+                	if (!this.ignoreGravity) {
+                    this.die();
                 	}
                     return;
                 }
             }
-
-			if (!this.ignoreGravity)
-			{
-				this.motY -= 0.03999999910593033D;
-			}
-            //this.move(this.motX, this.motY, this.motZ);
-            //this.motX *= 0.9800000190734863D;
-			if (!this.ignoreGravity)
-			{
-				this.motY -= 0.03999999910593033D;
-			}
-            //this.motZ *= 0.9800000190734863D;
-            if (!this.world.isClientSide && !this.ignoreGravity) {
+            if (!this.ignoreGravity) {
+            this.motY -= 0.03999999910593033D;
+            }
+            this.move(this.motX, this.motY, this.motZ);
+            this.motX *= 0.9800000190734863D;
+            if (!this.ignoreGravity) {
+            this.motY *= 0.9800000190734863D;
+            }
+            this.motZ *= 0.9800000190734863D;
+            if (!this.world.isClientSide) {
                 blockposition = new BlockPosition(this);
                 if (this.onGround) {
                     this.motX *= 0.699999988079071D;
                     this.motZ *= 0.699999988079071D;
-					if (!this.ignoreGravity)
-					{
-						this.motY *= -0.5D;
-					}
-                    if (this.world.getType(blockposition).getBlock() != Blocks.PISTON_EXTENSION  && (!this.ignoreGravity)) {
+                    if (!this.ignoreGravity) {
+                    this.motY *= -0.5D;
+                    }
+                    if (this.world.getType(blockposition).getBlock() != Blocks.PISTON_EXTENSION && (!this.ignoreGravity)) {
                         this.die();
                         if (!this.e) {
                             if (this.world.a(block, blockposition, true, EnumDirection.UP, (Entity) null, (ItemStack) null) && !BlockFalling.canFall(this.world, blockposition.down()) /* mimic the false conditions of setTypeIdAndData */ && blockposition.getX() >= -30000000 && blockposition.getZ() >= -30000000 && blockposition.getX() < 30000000 && blockposition.getZ() < 30000000 && blockposition.getY() >= 0 && blockposition.getY() < 256 && this.world.getType(blockposition) != this.block) {
@@ -163,10 +145,9 @@ public class NewFloatBlock extends EntityFallingBlock {
                             }
                         }
                     }
-                } else if (((this.ticksLived > 5 && !this.world.isClientSide && (blockposition.getY() < 1 || blockposition.getY() > 256) || this.ticksLived > 600) &&
-                	(!this.ignoreGravity)))
-                	{
-                	if (this.dropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
+                } else if (((this.ticksLived > 100 && !this.world.isClientSide && (blockposition.getY() < 1 || blockposition.getY() > 256) || this.ticksLived > 600)
+                && (!this.ignoreGravity))){
+                    if (this.dropItem && this.world.getGameRules().getBoolean("doEntityDrops")) {
                         this.a(new ItemStack(block, 1, block.getDropData(this.block)), 0.0F);
                     }
 
@@ -175,7 +156,6 @@ public class NewFloatBlock extends EntityFallingBlock {
             }
 
         }
-    
     }
 
     public void e(float f, float f1) {
@@ -213,8 +193,6 @@ public class NewFloatBlock extends EntityFallingBlock {
 
     }
 
-
-    
     protected void b(NBTTagCompound nbttagcompound) {
         Block block = this.block != null ? this.block.getBlock() : Blocks.AIR;
         MinecraftKey minecraftkey = (MinecraftKey) Block.REGISTRY.c(block);
@@ -282,25 +260,19 @@ public class NewFloatBlock extends EntityFallingBlock {
         }
 
     }
-	public Location getLocation()
-	{
-		return new Location(getWorldB(), this.locX, this.locY, this.locZ);
-	}
-	
-	public CraftWorld getWorldB() {
-		return ((WorldServer)this.world).getWorld();
-	}
+
     
-	public World getWorld() {
-		return ((WorldServer)this.world).getWorld().getHandle();
-	}
-	
     public IBlockData getBlock() {
         return this.block;
     }
     
 	public int getBlockId() {
-		return this.getId();
+		return Block.getCombinedId(this.block);
+	}
+	
+	public Vector getVelocity()
+	{
+		return new Vector(this.motX, this.motY, this.motZ);
 	}
 
 	public void setVelocity(Vector vel)
@@ -311,11 +283,32 @@ public class NewFloatBlock extends EntityFallingBlock {
 		this.velocityChanged = true;
 	}
 	
+	public Location getLocation()
+	{
+		return new Location(getWorldB(), this.locX, this.locY, this.locZ);
+	}
+	
+	public CraftWorld getWorldB() {
+		return ((WorldServer)this.world).getWorld();
+	}
+
+	public void setLocation(Location l)
+	{
+		this.locX = l.getX();
+		this.locY = l.getY();
+		this.locZ = l.getZ();
+	}
+	
 	public byte getBlockData()
 	{
 		return (byte)this.data;
 	}
-    
+	
+	public void remove()
+	{
+		die();
+	}
+	
 	public boolean teleport(Location location) {
 		return teleport(location, PlayerTeleportEvent.TeleportCause.PLUGIN);
 	}
@@ -328,8 +321,4 @@ public class NewFloatBlock extends EntityFallingBlock {
 		return true;
 	}
 	
-	public void remove()
-	{
-		die();
-	}
 }

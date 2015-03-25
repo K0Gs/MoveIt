@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.server.v1_8_R2.Entity;
+import net.minecraft.server.v1_8_R2.EntityTypes;
 import net.minecraft.server.v1_8_R2.WorldServer;
 
 import org.apache.commons.lang.Validate;
@@ -602,7 +603,12 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			
 			List entityList = ((World) worldList.get(a)).getEntities();
 		for(int f = 0; f < entityList.size(); f++){
+
+			//MoveItMain.instance.getServer().broadcastMessage("Entity Type: " + ((org.bukkit.entity.Entity) entityList.get(f)).getClass().getName());
+			
 			if( ((org.bukkit.entity.Entity) entityList.get(f)).getType().getTypeId() == 21){
+
+				//MoveItMain.instance.getServer().broadcastMessage("Entity Type: " + ((org.bukkit.entity.Entity) entityList.get(f)).getCustomName());
 				//((org.bukkit.entity.Entity) entityList.get(f)).remove();
 				
 				//NewFloatBlock fb = (NewFloatBlock) ((CraftFallingSand) entityList.get(f)).getHandle();
@@ -611,7 +617,14 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	        		//fb.setVelocity(fb.getBukkitEntity().getVelocity().multiply(-1));
 	        		//MoveItMain.instance.getServer().broadcastMessage("Float that block...");
 	        		//((CraftFallingSand)entityList.get(f)).getHandle().getBukkitEntity().setVelocity(((CraftFallingSand)entityList.get(f)).getHandle().getBukkitEntity().getVelocity().multiply(-1));;
+				if(((org.bukkit.entity.Entity) entityList.get(f)).getCustomName() != null){
+				if(((org.bukkit.entity.Entity) entityList.get(f)).getCustomName().equals("FloatBlock")){
 				((org.bukkit.entity.Entity) entityList.get(f)).setVelocity(((org.bukkit.entity.Entity) entityList.get(f)).getVelocity().multiply(-1));
+				double speed = 1 ;
+				speed *= 0.03999999910593033D;
+					((org.bukkit.entity.Entity) entityList.get(f)).setVelocity(new Vector(0,speed,0));
+				}
+				}
 			}
 
 		}
@@ -626,25 +639,28 @@ public class MoveItCommand implements CommandExecutor, Listener{
         
 
         double x = location.getBlockX() + 0.5;
-        double y = location.getBlockY() + 1.5;
+        double y = location.getBlockY();// + 1.5;
         double z = location.getBlockZ() + 0.5;
         WorldServer world = ((CraftWorld)location.getWorld()).getHandle();
         //NewFloatingBlock temptrans = new NewFloatingBlock(world);
-        com.k0gshole.MoveIt.NewFloatBlock.d0 = x;
-        com.k0gshole.MoveIt.NewFloatBlock.d1 = y - 1.5;
-        com.k0gshole.MoveIt.NewFloatBlock.d2 = z;
-        com.k0gshole.MoveIt.NewFloatBlock.playBlock = net.minecraft.server.v1_8_R2.Block.getById(material.getId()).getBlockData();
-        com.k0gshole.MoveIt.NewFloatBlock.playInt = data;
+        //com.k0gshole.MoveIt.NewFloatBlock.d0 = x;
+        //com.k0gshole.MoveIt.NewFloatBlock.d1 = y - 1.5;
+        //com.k0gshole.MoveIt.NewFloatBlock.d2 = z;
+       // com.k0gshole.MoveIt.NewFloatBlock.playBlock = net.minecraft.server.v1_8_R2.Block.getById(material.getId()).getBlockData();
+        //com.k0gshole.MoveIt.NewFloatBlock.playInt = data;
         //com.k0gshole.MoveIt.NewFloatingBlock.dataTest(world);
         //MoveItMain.instance.getServer().broadcastMessage(Double.toString(d0) + " " + Double.toString(d1) + " " +Double.toString(d2) + " " + playBlock.getName() + " " + Integer.toString(playInt));
         //MoveItMain.instance.getServer().broadcastMessage(testData);
         //NewFloatingBlock entity = new NewFloatingBlock(world, "null");
 
-        entity = new NewFloatBlock(world, 0);
+        //entity = new NewFloatBlock(world, d0, d1, d2, 0);
+        //entity.ticksLived = 1;
+        NewFloatBlock entity = new NewFloatBlock(world, x, y, z, net.minecraft.server.v1_8_R2.Block.getById(material.getId()).getBlockData(), data);
         entity.ticksLived = 1;
-
+        entity.setCustomName("FloatBlock");
+        
         world.addEntity(entity, SpawnReason.CUSTOM);
-		entity.setVelocity(new Vector(0,0.09,0));
+		//entity.setVelocity(new Vector(0,0.3,0));
 		//MoveItMain.instance.getServer().broadcastMessage(entity.getUniqueID().toString());
         
 
@@ -1067,7 +1083,11 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			tempBlock.setData(new Byte((byte) 0));
 			for(int f = 0; f < entityList.size(); f++){
 				if( ((org.bukkit.entity.Entity) entityList.get(f)).getType().getTypeId() == 21){
+					if(((org.bukkit.entity.Entity) entityList.get(f)).getCustomName() != null){
+					if(((org.bukkit.entity.Entity) entityList.get(f)).getCustomName().equals("FloatBlock")){
 					((org.bukkit.entity.Entity) entityList.get(f)).remove();
+					}
+					}
 				}
 				//MoveItMain.instance.getServer().broadcastMessage(((org.bukkit.entity.Entity) entityList.get(f)).getUniqueId().toString());
 				//MoveItMain.instance.getServer().broadcastMessage(entityUUID.toString());
@@ -1112,19 +1132,42 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	}
 	
 
+	public void killFloat(){
+		List worlds = MoveItMain.instance.getServer().getWorlds();
+		for(int b = 0; b < worlds.size(); b++){
+			World world = (World) worlds.get(b);
+		List entityList = world.getEntities();
+		for(int f = 0; f < entityList.size(); f++){
+			if( ((org.bukkit.entity.Entity) entityList.get(f)).getType().getTypeId() == 21){
+				if(((org.bukkit.entity.Entity) entityList.get(f)).getCustomName() != null){
+				if(((org.bukkit.entity.Entity) entityList.get(f)).getCustomName().equals("FloatBlock")){
+				((org.bukkit.entity.Entity) entityList.get(f)).remove();
+				}
+				}
+			}
+			//MoveItMain.instance.getServer().broadcastMessage(((org.bukkit.entity.Entity) entityList.get(f)).getUniqueId().toString());
+			//MoveItMain.instance.getServer().broadcastMessage(entityUUID.toString());
 
+		}
+		}
+	}
 	
 	@EventHandler
 	public void ongameTick(GameTickEvent event){
 		count++;
 		count2++;
-		int count3 = 0;
+		int count3 = 1;
 		
 		if (count3 == 1){
 			floatBlocks();
 		}
 		
-		if(count2 == 5){
+		if(count2 == 7){
+			killFloat();
+			//count2 = 0;
+		}
+		
+		if(count2 == 7){
 			playFrames();
 			count2 = 0;
 		}
