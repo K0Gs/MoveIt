@@ -51,6 +51,7 @@ public class NewFloatBlock extends EntityFallingBlock {
         this.lastX = d0;
         this.lastY = d1;
         this.lastZ = d2;
+        
 	}
 
 	protected boolean s_() {
@@ -320,5 +321,8 @@ public class NewFloatBlock extends EntityFallingBlock {
 
 		return true;
 	}
-	
+	//
+	//FloatBlock Idea from Smoothelevator fork...
+	//https://github.com/K0Gs/SmoothElevator
+	//
 }

@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import net.minecraft.server.v1_8_R2.Entity;
 import net.minecraft.server.v1_8_R2.EntityTypes;
+import net.minecraft.server.v1_8_R2.IBlockData;
 import net.minecraft.server.v1_8_R2.WorldServer;
 
 import org.apache.commons.lang.Validate;
@@ -34,6 +35,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 import com.k0gshole.MoveIt.NewFloatBlock.*;
@@ -50,11 +52,14 @@ public class MoveItCommand implements CommandExecutor, Listener{
 	public int pFrameInt;
 	public Block pFrameBlock;
 	public int pwand;
+	public int pwandFine;
 	public ArrayList pSelections;
 	public Material floatMat = null;
 	public Byte floatByte = new Byte((byte) 0);
 	public Location floatLocation = null;
 	NewFloatBlock entity = null;
+	public String Cor1;
+	public String Cor2;
 	//boolean up = true;
 	//public static double d0 = 0;
 	//public static double d1 = 0;
@@ -79,6 +84,9 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		pFrameBlock = null;
 		pFrameInt = 0;
 		pwand = 0;
+		pwandFine = 0;
+		Cor1 = "-1,-1,-1";
+		Cor2 = "-1,-1,-1";
 	}
 	
 	public MoveItCommand(MoveItMain plugin){
@@ -99,12 +107,19 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			pFrameUuid = null;
 			pFrameBlock = null;
 			pwand = 0;
+			pwandFine = 0;
+			Cor1 = "-1,-1,-1";
+			Cor2 = "-1,-1,-1";
 		}else{
 			pAnimUuid = (UUID) pSelections.get(1);
 			pFrameInt = (Integer) pSelections.get(2);
 			pFrameUuid = (UUID) pSelections.get(3);
 			pFrameBlock = (Block) pSelections.get(4);
 			pwand = (Integer) pSelections.get(5);
+			pwand = (Integer) pSelections.get(6);
+
+			Cor1 = (String) pSelections.get(7);
+			Cor2 = (String) pSelections.get(8);
 		}
 		if (arg2.length == 0){
 			//if (arg2 == ""){
@@ -155,7 +170,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 					//System.out.println(arg2[2] +" "+ player +" "+ uuid +" "+ Instant.now());
 					MoveItMain.instance.addIndexFrames(player.getUniqueId(), uuid, frameUuid, 1);
 					//System.out.println(player +" "+ uuid +" "+ frameUuid +" "+ 1 +" "+Instant.now());
-					MoveItMain.instance.addIndexPSelect(player.getUniqueId(), uuid, 1, frameUuid, null, pwand);
+					MoveItMain.instance.addIndexPSelect(player.getUniqueId(), uuid, 1, frameUuid, null, pwand, pwandFine, Cor1, Cor2);
 					//System.out.println(player +" "+ uuid +" "+ 1 +" "+ frameUuid +" "+ null);
 					MoveItMain.instance.addIndexAnimationPosition(uuid, 1, "loop");
 					player.sendMessage("The animation "+arg2[2]+" has been created...");
@@ -177,7 +192,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 
 					if(arg2.length < 3){
 
-						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt+1, frameUuid, null, pwand);
+						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt+1, frameUuid, null, pwand, pwandFine, Cor1, Cor2);
 						//System.out.println(player +" "+ pAnimUuid +" "+ pFrameInt+1 +" "+ frameUuid +" "+ null);
 						MoveItMain.instance.addIndexFrames(player.getUniqueId(), pAnimUuid, frameUuid, pFrameInt + 1);
 						//System.out.println(player +" "+ pAnimUuid +" "+ frameUuid +" "+ pFrameInt + 1 +" "+ Instant.now());
@@ -245,7 +260,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 						player.sendMessage(animRemoved + " animation(s) have been deleted...");
 						player.sendMessage(frameCount + " frame(s) have been deleted...");
 						player.sendMessage(blockCount + " block(s) have been deleted...");
-						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), null, 0, null, null, pwand);
+						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), null, 0, null, null, pwand, pwandFine, Cor1, Cor2);
 						return true;
 
 					}
@@ -291,7 +306,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 						int listCount = framesListFull.size()-1;
 						ArrayList  tempSelectList = new ArrayList((ArrayList)framesListFull.get(listCount));
 
-						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, (Integer) tempSelectList.get(3), (UUID) tempSelectList.get(2), null, pwand);
+						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, (Integer) tempSelectList.get(3), (UUID) tempSelectList.get(2), null, pwand, pwandFine, Cor1, Cor2);
 						return true;
 
 
@@ -365,7 +380,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 						ArrayList tempListFin = (ArrayList) tempList5.get(0);
 						//player.sendMessage("Player: "+player.getUniqueId().toString()+"Animation: "+tempUUID+"Frame: 1 FrameUUID: "+tempListFin.get(2));
 						player.sendMessage("Animation " + arg2[2] + " has been selected...");
-						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), (UUID) tempUUID, 1, (UUID) tempListFin.get(2), null, pwand);
+						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), (UUID) tempUUID, 1, (UUID) tempListFin.get(2), null, pwand, pwandFine, Cor1, Cor2);
 						return true;
 					}
 
@@ -399,7 +414,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 								//player.sendMessage("Player: "+player.getUniqueId().toString()+"Animation: "+pAnimUuid.toString()+"Frame: "+arg2[2]+"FrameUUID: "+ ((UUID) tempList6.get(2)).toString());
 
 								player.sendMessage("Frame " + arg2[2] + " has been selected...");
-								MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, Integer.parseInt(arg2[2]), (UUID) tempList6.get(2), null, pwand);
+								MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, Integer.parseInt(arg2[2]), (UUID) tempList6.get(2), null, pwand, pwandFine, Cor1, Cor2);
 								return true;
 							}
 						}
@@ -473,17 +488,37 @@ public class MoveItCommand implements CommandExecutor, Listener{
 				if(arg2.length < 2){
 					if(pwand == 0){
 						pwand = 1;
-						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, pFrameBlock, pwand);
+						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, pFrameBlock, pwand, pwandFine, Cor1, Cor2);
 						player.sendMessage("Wand has been enabled...");
 						return true;
 					}
 					else if(pwand == 1){
 						pwand = 0;
-						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, pFrameBlock, pwand);
+						pwandFine = 0;
+						MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, pFrameBlock, pwand, pwandFine, Cor1, Cor2);
 						player.sendMessage("Wand has been disabled...");
 						return true;
 					}
 					return true;
+				}
+				if(arg2.length == 2){
+					if(arg2[1].equalsIgnoreCase("fine")){
+						if(pwand == 1){
+						if(pwandFine == 0){
+							pwandFine = 1;
+							MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, pFrameBlock, pwand, pwandFine, Cor1, Cor2);
+							player.sendMessage("Wand has been enabled...");
+							return true;
+						}
+						else if(pwandFine == 1){
+							pwandFine = 0;
+							MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, pFrameBlock, pwand, pwandFine, Cor1, Cor2);
+							player.sendMessage("Wand has been disabled...");
+							return true;
+						}
+						return true;
+						}
+					}
 				}
 				if(arg2.length > 3){
 					return true;
@@ -558,6 +593,94 @@ public class MoveItCommand implements CommandExecutor, Listener{
 				
 				//player.sendMessage("Play List Size "+Integer.toString(playListCount.size()) +"...");
 				return true;
+			}
+			
+			if(arg2[0].equalsIgnoreCase("addblocks")){
+				int addCount = 0;
+				if(Cor1.equals("-1,-1,-1") || Cor2.equals("-1,-1,-1")){
+					player.sendMessage("You need specify Coord1 and Coord2...");
+					player.sendMessage("Use the wand to select two corners...");
+					return false;
+				}
+				
+				String[] tempCoord1 = Cor1.split(":");
+				String[] tempCoord2 = Cor2.split(":");
+				//MoveItMain.instance.getServer().broadcastMessage("tempCoord..." + Integer.parseInt(tempCoord[0]) + " " + Integer.parseInt(tempCoord[1]) + " " + Integer.parseInt(tempCoord[2]));
+				World world = player.getWorld();
+				Location loc1 = world.getBlockAt(Integer.parseInt(tempCoord1[0]), Integer.parseInt(tempCoord1[1]), Integer.parseInt(tempCoord1[2])).getLocation();
+				Location loc2 = world.getBlockAt(Integer.parseInt(tempCoord2[0]), Integer.parseInt(tempCoord2[1]), Integer.parseInt(tempCoord2[2])).getLocation();
+				
+				int startx = Math.min(loc1.getBlockX(), loc2.getBlockX());
+				int endx = Math.max(loc1.getBlockX(), loc2.getBlockX());
+				
+				int starty = Math.min(loc1.getBlockY(), loc2.getBlockY());
+				int endy = Math.max(loc1.getBlockY(), loc2.getBlockY());
+				
+				int startz = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
+				int endz = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
+				
+				for(int a = startx; a <= endx; a++){
+					for(int b = starty; b <= endy; b++){
+						for(int c = startz; c <= endz; c++){
+							
+							Block tempBlock = world.getBlockAt(a, b, c);
+							if(tempBlock.getType() != Material.AIR){
+								player.sendMessage("Not AIR...");
+							createNewFrameBlocks(player, tempBlock);
+							MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand, pwandFine, Cor1, Cor2);
+							addCount++;
+							}
+							player.sendMessage("AIR...");
+						}
+					}
+				}
+
+				player.sendMessage(Integer.toString(addCount) + " blocks added...");
+				return true;
+				
+			}
+			
+			if(arg2[0].equalsIgnoreCase("remblocks")){
+				int remCount = 0;
+				if(Cor1.equals("-1,-1,-1") || Cor2.equals("-1,-1,-1")){
+					player.sendMessage("You need specify Coord1 and Coord2...");
+					player.sendMessage("Use the wand to select two corners...");
+					return false;
+				}
+				
+				String[] tempCoord1 = Cor1.split(":");
+				String[] tempCoord2 = Cor2.split(":");
+				//MoveItMain.instance.getServer().broadcastMessage("tempCoord..." + Integer.parseInt(tempCoord[0]) + " " + Integer.parseInt(tempCoord[1]) + " " + Integer.parseInt(tempCoord[2]));
+				World world = player.getWorld();
+				Location loc1 = world.getBlockAt(Integer.parseInt(tempCoord1[0]), Integer.parseInt(tempCoord1[1]), Integer.parseInt(tempCoord1[2])).getLocation();
+				Location loc2 = world.getBlockAt(Integer.parseInt(tempCoord2[0]), Integer.parseInt(tempCoord2[1]), Integer.parseInt(tempCoord2[2])).getLocation();
+				
+				int startx = Math.min(loc1.getBlockX(), loc2.getBlockX());
+				int endx = Math.max(loc1.getBlockX(), loc2.getBlockX());
+				
+				int starty = Math.min(loc1.getBlockY(), loc2.getBlockY());
+				int endy = Math.max(loc1.getBlockY(), loc2.getBlockY());
+				
+				int startz = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
+				int endz = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
+				
+				for(int a = startx; a <= endx; a++){
+					for(int b = starty; b <= endy; b++){
+						for(int c = startz; c <= endz; c++){
+							
+							Block tempBlock = world.getBlockAt(a, b, c);
+							if(tempBlock.getType() != Material.AIR){
+							removeFrameBlocks(player, tempBlock);
+							remCount++;
+							//MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand, pwandFine, Cor1, Cor2);
+							}
+						}
+					}
+				}
+
+				player.sendMessage(Integer.toString(remCount) + " blocks removed...");
+				return true;
+				
 			}
 
 		}
@@ -655,12 +778,15 @@ public class MoveItCommand implements CommandExecutor, Listener{
 
         //entity = new NewFloatBlock(world, d0, d1, d2, 0);
         //entity.ticksLived = 1;
-        NewFloatBlock entity = new NewFloatBlock(world, x, y, z, net.minecraft.server.v1_8_R2.Block.getById(material.getId()).getBlockData(), data);
+        IBlockData tempBlock = net.minecraft.server.v1_8_R2.Block.getByCombinedId(material.getId());
+        tempBlock = tempBlock.getBlock().fromLegacyData(data);
+        
+        NewFloatBlock entity = new NewFloatBlock(world, x, y, z, tempBlock, data);
         entity.ticksLived = 1;
         entity.setCustomName("FloatBlock");
         
         world.addEntity(entity, SpawnReason.CUSTOM);
-		//entity.setVelocity(new Vector(0,0.3,0));
+		entity.setVelocity(new Vector(0,0.04,0));
 		//MoveItMain.instance.getServer().broadcastMessage(entity.getUniqueID().toString());
         
 
@@ -818,10 +944,23 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		}
 		String blockCount = MoveItMain.instance.removeBlock(player.getTargetBlock((HashSet<Byte>) null, 15), pFrameUuid);
 
-		player.sendMessage(blockCount + " block(s) have been deleted...");
+		player.sendMessage(blockCount + " block has been deleted...");
 		//return true;
 	
 	}
+	
+	public void removeFrameBlocks(Player player, Block tempBlock){
+		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
+			player.sendMessage("You need to be looking at a block within a radius of 15...");
+			//return false;
+		}
+		MoveItMain.instance.removeBlock(tempBlock, pFrameUuid);
+
+		//player.sendMessagelocks have been deleted...");
+		//return true;
+	
+	}
+	
 	public void createNewFrameBlocks(Player player){
 		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
 			player.sendMessage("You need to be looking at a block within a radius of 15...");
@@ -832,15 +971,85 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			player.sendMessage("You must have an animation selected...");
 			//return false;
 		}
+
 		Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
 		String tempWorld = tempBlock.getWorld().getName();
 		String tempCoord = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
 		//player.sendMessage(tempCoord);
 		MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, Instant.now().toString());
-		MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand);
+		MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand, pwandFine, Cor1, Cor2);
 		player.sendMessage("The block has been added...");
+		
 		//return true;
 	}
+	
+	public void createNewFrameBlocks(Player player, Block tempBlock){
+		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
+			player.sendMessage("You need to be looking at a block within a radius of 15...");
+			//return false;
+		}
+		ArrayList plSelec = new ArrayList(MoveItMain.instance.returnPlayerPSelect(player.getUniqueId()));
+		if(plSelec.size() == 0){
+			player.sendMessage("You must have an animation selected...");
+			//return false;
+		}
+
+		//Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
+		String tempWorld = tempBlock.getWorld().getName();
+		String tempCoord = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
+		//player.sendMessage(tempCoord);
+		MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, Instant.now().toString());
+		//MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand, pwandFine, Cor1, Cor2);
+		//player.sendMessage("The block has been added...");
+		
+		//return true;
+	}
+	
+	public void setCoord1(Player player){
+		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
+			player.sendMessage("You need to be looking at a block within a radius of 15...");
+			//return false;
+		}
+		ArrayList plSelec = new ArrayList(MoveItMain.instance.returnPlayerPSelect(player.getUniqueId()));
+		if(plSelec.size() == 0){
+			player.sendMessage("You must have an animation selected...");
+			//return false;
+		}
+
+		Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
+		String tempWorld = tempBlock.getWorld().getName();
+		Cor1 = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
+		//player.sendMessage(tempCoord);
+		//MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, Instant.now().toString());
+		
+		MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand, pwandFine, Cor1, Cor2);
+		player.sendMessage("Coord1 set to "+Cor1+"...");
+		
+		//return true;
+	}
+	
+	public void setCoord2(Player player){
+		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
+			player.sendMessage("You need to be looking at a block within a radius of 15...");
+			//return false;
+		}
+		ArrayList plSelec = new ArrayList(MoveItMain.instance.returnPlayerPSelect(player.getUniqueId()));
+		if(plSelec.size() == 0){
+			player.sendMessage("You must have an animation selected...");
+			//return false;
+		}
+
+		Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
+		String tempWorld = tempBlock.getWorld().getName();
+		Cor2 = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
+		//player.sendMessage(tempCoord);
+		//MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, Instant.now().toString());
+		MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand, pwandFine, Cor1, Cor2);
+		player.sendMessage("Coord2 set to "+Cor2+"...");
+		
+		//return true;
+	}
+	
 	
 	
 	
@@ -1198,8 +1407,14 @@ public class MoveItCommand implements CommandExecutor, Listener{
 					if(pwand == 1){
 
 						//MoveItMain.instance.getServer().broadcastMessage("wand_enabled");
+						if(pwandFine == 0){
+							setCoord1(player);
+							event.setCancelled(true);
+						}
+						else if(pwandFine == 1){
 						createNewFrameBlocks(player);
 						event.setCancelled(true);
+						}
 				}
 			}
 			
@@ -1208,8 +1423,14 @@ public class MoveItCommand implements CommandExecutor, Listener{
 					if(pwand == 1){
 
 						//MoveItMain.instance.getServer().broadcastMessage("wand_enabled");
+						if(pwandFine == 0){
+							setCoord2(player);
+							event.setCancelled(true);
+						}
+						else if(pwandFine == 1){
 						removeFrameBlocks(player);
 						event.setCancelled(true);
+						}
 				}
 			}
 

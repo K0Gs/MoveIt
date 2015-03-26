@@ -486,7 +486,7 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 	}
 
 
-	public void addIndexPSelect(UUID player, UUID animation, Integer frameInt, UUID frame, Block block, int wand){
+	public void addIndexPSelect(UUID player, UUID animation, Integer frameInt, UUID frame, Block block, int wand, int fineWand, String Cor1, String Cor2){
 		
 		for(int a = 0; a < selections.size(); a++){
 			ArrayList tempList = new ArrayList((ArrayList) selections.get(a));
@@ -503,6 +503,9 @@ public void addIndexFrames(UUID player, UUID animUuid, UUID frameUuid, int frame
 		tList.add(frame);
 		tList.add(block);
 		tList.add(wand);
+		tList.add(fineWand);
+		tList.add(Cor1);
+		tList.add(Cor2);
 		this.selections.add(tList);
 		
 	}
