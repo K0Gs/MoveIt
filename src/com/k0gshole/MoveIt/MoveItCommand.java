@@ -116,7 +116,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			pFrameUuid = (UUID) pSelections.get(3);
 			pFrameBlock = (Block) pSelections.get(4);
 			pwand = (Integer) pSelections.get(5);
-			pwand = (Integer) pSelections.get(6);
+			pwandFine = (Integer) pSelections.get(6);
 
 			Cor1 = (String) pSelections.get(7);
 			Cor2 = (String) pSelections.get(8);
@@ -1060,12 +1060,20 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			pFrameUuid = null;
 			pFrameBlock = null;
 			pwand = 0;
+			pwandFine = 0;
+			
+			Cor1 = "-1,-1,-1";
+			Cor2 = "-1,-1,-1";
 		}else{
 			pAnimUuid = (UUID) pSelections.get(1);
 			pFrameInt = (Integer) pSelections.get(2);
 			pFrameUuid = (UUID) pSelections.get(3);
 			pFrameBlock = (Block) pSelections.get(4);
 			pwand = (Integer) pSelections.get(5);
+			pwandFine = (Integer) pSelections.get(6);
+
+			Cor1 = (String) pSelections.get(7);
+			Cor2 = (String) pSelections.get(8);
 		}
 	}
 	
@@ -1288,8 +1296,10 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			List entityList = world.getEntities();
 
 			//schedulePlaceBlocks(toRemoveList);
+			if(!tempBlock.getType().equals(Material.AIR)){
 			tempBlock.setType(Material.AIR);
 			tempBlock.setData(new Byte((byte) 0));
+			}
 			for(int f = 0; f < entityList.size(); f++){
 				if( ((org.bukkit.entity.Entity) entityList.get(f)).getType().getTypeId() == 21){
 					if(((org.bukkit.entity.Entity) entityList.get(f)).getCustomName() != null){
