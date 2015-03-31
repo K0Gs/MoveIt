@@ -19,10 +19,12 @@ import net.minecraft.server.v1_8_R2.WorldServer;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,6 +38,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import com.k0gshole.MoveIt.NewFloatBlock.*;
@@ -998,14 +1001,17 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		String tempWorld = tempBlock.getWorld().getName();
 		String tempCoord = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
 		//player.sendMessage(tempCoord);
-		MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, Instant.now().toString());
+		//MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, Instant.now().toString());
 		//MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand, pwandFine, Cor1, Cor2);
+		MoveItMain.instance.addIndexFrameBlocks(tempBlock.getType(), tempBlock.getData(),  tempCoord, tempWorld, player.getUniqueId(), pFrameUuid, Instant.now().toString());
+		MoveItMain.instance.addIndexPSelect(player.getUniqueId(), pAnimUuid, pFrameInt, pFrameUuid, tempBlock, pwand, pwandFine, Cor1, Cor2);
+		
 		//player.sendMessage("The block has been added...");
 		
 		//return true;
 	}
 	
-	public void setCoord1(Player player){
+	public void setCoord1(Player player, Block tempBlock){
 		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
 			player.sendMessage("You need to be looking at a block within a radius of 15...");
 			//return false;
@@ -1016,7 +1022,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			//return false;
 		}
 
-		Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
+		//Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
 		String tempWorld = tempBlock.getWorld().getName();
 		Cor1 = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
 		//player.sendMessage(tempCoord);
@@ -1028,7 +1034,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		//return true;
 	}
 	
-	public void setCoord2(Player player){
+	public void setCoord2(Player player, Block tempBlock){
 		if(player.getTargetBlock((HashSet<Byte>) null, 15).isEmpty()){
 			player.sendMessage("You need to be looking at a block within a radius of 15...");
 			//return false;
@@ -1039,7 +1045,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 			//return false;
 		}
 
-		Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
+		//Block tempBlock = player.getTargetBlock((HashSet<Byte>) null, 15);
 		String tempWorld = tempBlock.getWorld().getName();
 		Cor2 = Integer.toString(tempBlock.getLocation().getBlockX()) +":"+ Integer.toString(tempBlock.getLocation().getBlockY()) + ":" + Integer.toString(tempBlock.getLocation().getBlockZ());
 		//player.sendMessage(tempCoord);
@@ -1401,16 +1407,85 @@ public class MoveItCommand implements CommandExecutor, Listener{
 		
 	}
 	
+	public boolean createAnimation(Player player, String[] arg2){
+		ArrayList playerSelection = new ArrayList((ArrayList) MoveItMain.instance.returnLPSelect());
+		UUID uuid = UUID.randomUUID();
+		UUID frameUuid = UUID.randomUUID();
+		ArrayList tempList = new ArrayList(MoveItMain.instance.returnLAnimation());
+		for(int a = 0; a < tempList.size();a++){
+			ArrayList tempList2 = (ArrayList)tempList.get(a);
+			if( arg2[1].equalsIgnoreCase((String)tempList2.get(0))){
+				player.sendMessage("This animation "+arg2[1]+" has already been created...");
+				return false;
+			}
+		}
 
+		MoveItMain.instance.addIndexAnimation(arg2[1], player.getUniqueId(), uuid, Instant.now().toString());
+		//System.out.println(arg2[2] +" "+ player +" "+ uuid +" "+ Instant.now());
+		MoveItMain.instance.addIndexFrames(player.getUniqueId(), uuid, frameUuid, 1);
+		//System.out.println(player +" "+ uuid +" "+ frameUuid +" "+ 1 +" "+Instant.now());
+		MoveItMain.instance.addIndexPSelect(player.getUniqueId(), uuid, 1, frameUuid, null, pwand, pwandFine, Cor1, Cor2);
+		//System.out.println(player +" "+ uuid +" "+ 1 +" "+ frameUuid +" "+ null);
+		MoveItMain.instance.addIndexAnimationPosition(uuid, 1, "loop");
+		player.sendMessage("The animation "+arg2[1]+" has been created...");
+		return true;
+	}
 	
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent event){
 		Player player = event.getPlayer();
 		updatePlayerSelection(player);
+		Block tempBlock = event.getClickedBlock();
+		//Material tempMat = tempBlock.getType();
 		//player.sendMessage(Integer.toString(pwand));
 		//MoveItMain.instance.getServer().broadcastMessage(Integer.toString(player.getItemInHand().getTypeId()));
 		//MoveItMain.instance.getServer().broadcastMessage(player.getItemInHand().getType().name());
-			if(player.getItemInHand().getType() == Material.SHEARS){
+		if(tempBlock.getType().equals(Material.WALL_SIGN) || tempBlock.getType().equals(Material.SIGN_POST)){
+			player.sendMessage("Sign Clicked...");
+			Sign tempSign = (Sign) tempBlock.getState();
+			String[] lines = tempSign.getLines();
+			//ItemMeta meta = tempSign;
+			for(int c = 0; c < lines.length; c++){
+				
+				player.sendMessage(Integer.toString(c)+".    "+ChatColor.stripColor(lines[c]));
+				if(lines[c].equals("\2473[\2474MoveIt\2473]")){
+					event.setCancelled(true);
+				}
+				else if(ChatColor.stripColor(lines[c]).equalsIgnoreCase("[MoveIt]")){
+					if(lines[1] != ""){
+					if(lines[2] != ""){
+					if(lines[2].equalsIgnoreCase("1") || lines[2].equalsIgnoreCase( "2")){
+					if(createAnimation(player, lines)){
+					player.sendMessage("Moveit sign match...");
+					tempSign.setLine(0, "\2473[\2474MoveIt\2473]");
+					tempSign.update();
+					}
+					else{
+						event.setCancelled(true);
+					}
+					}
+					else{
+						player.sendMessage(lines[2] + " is not an allowed play type...");
+						event.setCancelled(true);
+					}
+					}
+					else{
+						player.sendMessage("You need to select the animation type on line 3...");
+						event.setCancelled(true);
+					}
+					}
+					else {
+						player.sendMessage("You need to name the animation on line 2..");
+						event.setCancelled(true);
+					
+					}
+					//((Sign) tempBlock.getState()).setLine(0, "[\247eMoveIt\247r]");
+				}
+			}
+			
+		}
+		
+		if(player.getItemInHand().getType() == Material.SHEARS){
 				//MoveItMain.instance.getServer().broadcastMessage("Wand_CLick");
 				if(event.getAction() == Action.LEFT_CLICK_BLOCK){
 					//MoveItMain.instance.getServer().broadcastMessage("left_Wand_CLick");
@@ -1418,11 +1493,11 @@ public class MoveItCommand implements CommandExecutor, Listener{
 
 						//MoveItMain.instance.getServer().broadcastMessage("wand_enabled");
 						if(pwandFine == 0){
-							setCoord1(player);
+							setCoord1(player, tempBlock);
 							event.setCancelled(true);
 						}
 						else if(pwandFine == 1){
-						createNewFrameBlocks(player);
+						createNewFrameBlocks(player, tempBlock);
 						event.setCancelled(true);
 						}
 				}
@@ -1434,11 +1509,11 @@ public class MoveItCommand implements CommandExecutor, Listener{
 
 						//MoveItMain.instance.getServer().broadcastMessage("wand_enabled");
 						if(pwandFine == 0){
-							setCoord2(player);
+							setCoord2(player, tempBlock);
 							event.setCancelled(true);
 						}
 						else if(pwandFine == 1){
-						removeFrameBlocks(player);
+						removeFrameBlocks(player, tempBlock);
 						event.setCancelled(true);
 						}
 				}
@@ -1446,6 +1521,7 @@ public class MoveItCommand implements CommandExecutor, Listener{
 
 				
 		}
+		
 		
 	}
 	
