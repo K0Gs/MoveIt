@@ -1,6 +1,7 @@
 # MoveIt
 ```
-for(any ==){}```
+for(any ==){}
+```
 > `sample`**`sample`**`sample`
 ```
 do{}
