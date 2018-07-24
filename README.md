@@ -2,7 +2,9 @@
 ```
 for(any ==){}
 ```
-> `sample`**`sample`**`sample`
+<pre>
+<i>sample</i>
+</pre>
 ```
 do{}
 while()
